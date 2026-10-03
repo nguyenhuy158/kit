@@ -1,0 +1,93 @@
+# Reusable CI for every pnpm repo: install, `pnpm check`, then the optional
+# steps the caller opts into. The caller repo needs `.nvmrc`, a committed
+# pnpm-lock.yaml, `packageManager` in package.json, and the scripts it enables.
+#
+#   jobs:
+#     check:
+#       uses: nguyenhuy158/kit/.github/workflows/check.yml@v0.1.0
+#       with:
+#         run-test: true
+#         run-build: true
+#         run-e2e: true
+name: Check
+
+on:
+  workflow_call:
+    inputs:
+      run-test:
+        description: Run `pnpm test` after `pnpm check`.
+        type: boolean
+        default: false
+      run-build:
+        description: Run `pnpm build` last, to catch bundle-time errors the typecheck misses.
+        type: boolean
+        default: false
+      run-e2e:
+        description: Run `pnpm e2e` in its own job (installs Chromium when playwright-core is a dependency).
+        type: boolean
+        default: false
+
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check
+        run: pnpm check
+
+      - name: Unit tests
+        if: inputs.run-test
+        run: pnpm test
+
+      - name: Build
+        if: inputs.run-build
+        run: pnpm build
+
+  e2e:
+    name: E2E smoke
+    if: inputs.run-e2e
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # playwright-core ships no browser. Its own CLI installs the matching
+      # Chromium into ~/.cache/ms-playwright, where findChromium() looks.
+      # Fetch-only suites (no playwright-core) skip this.
+      - name: Install Chromium
+        run: |
+          if [ -x node_modules/.bin/playwright-core ]; then
+            pnpm exec playwright-core install --with-deps chromium
+          fi
+
+      - name: E2E
+        run: pnpm e2e
+
+      - name: Upload failure screenshot
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-failure
+          path: e2e-failure.png
+          if-no-files-found: ignore
