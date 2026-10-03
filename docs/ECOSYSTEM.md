@@ -113,7 +113,7 @@ Edge sources:
 | mytools pings every app | `mytools/app/routes/api.projects-status.tsx:1-8`, `mytools/app/data/projects.ts:1-7` (URLs live in D1 table `projects`) |
 | shared D1 `db` (`6eb9cfce-…`) | `database_id` in `sso/`, `mailer/`, `monitor/`, `hooks/`, `notes/`, `share/`, `cardstat/`, `mytools/wrangler.jsonc` |
 | ui-kit tokens copied | header comments in `ai-english/src/client/tokens.css:2`, `chia-keo/src/styles/tokens.css:2-3`, `notes/src/styles/tokens.css:19`, `monitor/client/src/styles/tokens.css:2`, `share/src/styles/tokens.css:2`, `cardstat/src/styles/tokens.css:17`, `mytools/app/styles/tokens.css:2-3` |
-| kit planned | see section 5 for which file each package replaces |
+| kit planned / adopted | see section 5 for which file each package replaces; adopted so far (branch `chore/standardize`, unmerged): sso and mytools (`sso/package.json`, `mytools/package.json`, `sso/.github/workflows/ci.yml:17`, `mytools/.github/workflows/ci.yml:17`) |
 
 ## 3. Per-repo
 
@@ -128,7 +128,8 @@ Cloudflare account resources referenced below:
 - **Auth:** is the issuer. Secrets `JWT_PRIVATE_KEY`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` (`sso/AGENTS.md:43-44`). Redirect allow-list `ALLOWED_REDIRECT_SUFFIX=.huyab.click`, TTL 86400 s (`sso/wrangler.jsonc`).
 - **Data:** D1 `db` (`sso_` prefix).
 - **Deploy:** `pnpm run deploy` (`sso/AGENTS.md:41`, `sso/README.md:35`); custom domain `auth.huyab.click`.
-- **Ships for consumers:** `sso/docs/INTEGRATION.md`, `sso/scaffold/cloudflare-worker/` (`sso-verifier.js`, `session.js`).
+- **Ships for consumers:** `sso/docs/INTEGRATION.md` and `sso/README.md`, which point relying apps at `@huyab/sso` (`sso/docs/INTEGRATION.md:83-96`, `sso/README.md:59-73`). The old copy-paste `sso/scaffold/cloudflare-worker/` was deleted on `chore/standardize`.
+- **kit:** `@huyab/config`, `@huyab/e2e` (`sso/package.json`), reusable `check.yml` (`sso/.github/workflows/ci.yml:17`). It does **not** use `@huyab/sso`: it signs and verifies its own tokens with the local key, with no JWKS fetch (`sso/AGENTS.md:15`).
 
 ### mailer
 - **Depends on:** Resend API (`mailer/src/index.ts:246`); sso for the log page (`mailer/src/index.ts:203-214`, `mailer/src/sso.ts`).
@@ -170,7 +171,7 @@ Same SwiftUI template, zero dependencies, same `Auth.swift` / `API.swift` / `Log
 - **Deploy:** unsigned IPA via `make-ipa.sh`, signed with Sideloadly (`chia-keo-ios/AGENTS.md:54`, `notes-ios/AGENTS.md:51`, `monitor-ios/AGENTS.md:49`); CI `test.yml` on `macos-15`.
 
 ### notes
-- **Depends on:** sso (`notes/wrangler.jsonc` `SSO_ISSUER`, `notes/worker/src/sso-verifier.js` = copy of `sso/scaffold`); Workers AI `AI`; R2 `notes-media` (`notes/wrangler.jsonc`).
+- **Depends on:** sso (`notes/wrangler.jsonc` `SSO_ISSUER`, `notes/worker/src/sso-verifier.js` = copy of the former `sso/scaffold`); Workers AI `AI`; R2 `notes-media` (`notes/wrangler.jsonc`).
 - **Depended on by:** notes-ios.
 - **Auth:** `huyab_sso` cookie only (`notes/worker/src/index.ts:181`, `notes-ios/Notes/API.swift:193-194`).
 - **Data:** D1 `db` (`notes_` prefix), R2 `notes-media`.
@@ -215,6 +216,7 @@ Same SwiftUI template, zero dependencies, same `Auth.swift` / `API.swift` / `Log
 - **Depends on:** D1 `db` (`projects` table) (`mytools/app/data/projects.ts:1-7`); KV `KV_GAMES`, `NOTES`; DOs `LotoGameRoom`, `OnlineCounter` (`mytools/wrangler.jsonc`); external Odoo JSON-RPC (`mytools/app/utils/odoo.ts:49`).
 - **Depended on by:** none. It pings every app listed in `projects` (`mytools/app/routes/api.projects-status.tsx`).
 - **Auth:** none (no SSO usage found in `mytools/app` or `mytools/workers`).
+- **kit:** `@huyab/config`, `@huyab/e2e` (`mytools/package.json`), reusable `check.yml` plus its own unit-test job for D1 secrets (`mytools/.github/workflows/ci.yml:17`).
 - **Data:** D1 `db`, two KV namespaces, DO SQLite.
 - **Deploy:** Workers Builds on push to `main` (`mytools/AGENTS.md:121`).
 
@@ -232,7 +234,7 @@ Same SwiftUI template, zero dependencies, same `Auth.swift` / `API.swift` / `Log
 - Docs only (`dev-notes/AGENTS.md:5-8`). Conventions in `dev-notes/conventions.md`.
 
 ### kit
-- **Depends on:** nothing. **Depended on by:** planned for every TS/JS repo (section 5). **Deploy:** git tags (`v0.1.0`), consumed as `pnpm add "github:nguyenhuy158/kit#v0.1.0&path:packages/<name>"`.
+- **Depends on:** nothing. **Depended on by:** sso and mytools (adopted on `chore/standardize`), planned for every other TS/JS repo (section 5). **Deploy:** git tags (`v0.1.0`), consumed as `pnpm add "github:nguyenhuy158/kit#v0.1.0&path:packages/<name>"`.
 
 ## 4. Shared contracts
 
@@ -329,8 +331,8 @@ Tokens stay copy-paste for now (ui-kit is intentionally not a package,
 
 | Package | Replaces (copies today) |
 | --- | --- |
-| `@huyab/sso` | `sso/scaffold/cloudflare-worker/sso-verifier.js` + `session.js` and its copies: `notes/worker/src/sso-verifier.js`, `share/worker/src/sso-verifier.ts`, `cardstat/src/infrastructure/auth/sso-verifier.ts`, `hooks/src/adapters/outbound/security/sso-verifier.ts`, `mailer/src/sso.ts`, `chia-keo/worker/src/sso.ts`, `picaku-mul/worker/sso.js`; `jose`-based variants in `monitor/server/src/index.ts:19-41`, `ai-english/src/adapters/jose/ssoVerifier.js` |
-| `@huyab/e2e` | `e2e/chromium.mjs` (ai-english, cardstat, chia-keo, monitor, mytools, notes, picaku-mul, share, sso, ui-kit), `e2e/harness.mjs` (hooks, mailer, resume), server start/stop in each `e2e/run.mjs` |
+| `@huyab/sso` | the former `sso/scaffold/cloudflare-worker/sso-verifier.js` + `session.js` (deleted on sso `chore/standardize`) and its copies: `notes/worker/src/sso-verifier.js`, `share/worker/src/sso-verifier.ts`, `cardstat/src/infrastructure/auth/sso-verifier.ts`, `hooks/src/adapters/outbound/security/sso-verifier.ts`, `mailer/src/sso.ts`, `chia-keo/worker/src/sso.ts`, `picaku-mul/worker/sso.js`; `jose`-based variants in `monitor/server/src/index.ts:19-41`, `ai-english/src/adapters/jose/ssoVerifier.js` |
+| `@huyab/e2e` | `e2e/chromium.mjs` (ai-english, cardstat, chia-keo, monitor, notes, picaku-mul, share, ui-kit; already removed from mytools and sso), `e2e/harness.mjs` (hooks, mailer, resume), server start/stop in each `e2e/run.mjs` |
 | `@huyab/config` | per-repo `biome.json` (ai-english, ai-english-expo, chia-keo, hooks, mailer, monitor, mytools, notes, picaku-mul, share, sso, ui-kit, xo-expo) and `tsconfig.json` strict settings |
 | `kit/.github/workflows/check.yml` | per-repo `.github/workflows/ci.yml` lint/check/build/e2e jobs |
 
