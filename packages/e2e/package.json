@@ -1,0 +1,16 @@
+{
+  "name": "@huyab/e2e",
+  "version": "0.1.0",
+  "description": "E2E plumbing for local smoke suites: dev-server lifecycle, Chromium lookup, fetch harness, local-only guard, fake SSO issuer",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src",
+    "!src/**/*.test.js"
+  ],
+  "engines": {
+    "node": ">=22"
+  }
+}
