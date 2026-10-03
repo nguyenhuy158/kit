@@ -1,0 +1,25 @@
+{
+  "name": "@huyab/sso",
+  "version": "0.1.0",
+  "description": "Verify the huyab_sso cookie / Bearer JWT issued by auth.huyab.click, plus a Hono requireUser() middleware",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./hono": "./src/hono.ts"
+  },
+  "files": [
+    "src",
+    "!src/**/*.test.ts"
+  ],
+  "peerDependencies": {
+    "hono": "^4"
+  },
+  "peerDependenciesMeta": {
+    "hono": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "hono": "^4.12.27"
+  }
+}
