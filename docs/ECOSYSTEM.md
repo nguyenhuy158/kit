@@ -22,7 +22,7 @@ a cited file changes, update this map in the same change.
 | `share` | web (worker + SPA) | https://share.huyab.click | Artifact hosting for AI agents, MCP + skill (`share/AGENTS.md:5-8`) |
 | `cardstat` | web (Next.js on OpenNext worker) | https://cardstats.huyab.click | Card spending stats (`cardstat/wrangler.jsonc`) |
 | `hooks` | worker (SSR HTML) | https://hooks.huyab.click | Webhook tester / inspector (`hooks/AGENTS.md:5-6`) |
-| `picaku-mul` | web (worker + static) | https://games.huyab.click (+ `pikachu.huyab.click` 301) | Multiplayer browser games on Durable Objects (`picaku-mul/AGENTS.md:5-10`, `picaku-mul/wrangler.toml`) |
+| `games` | web (worker + static) | https://games.huyab.click (+ `pikachu.huyab.click` 301) | Multiplayer browser games on Durable Objects (`games/AGENTS.md:5-10`, `games/wrangler.toml`) |
 | `mytools` | web (React Router SSR worker) | https://huyab.click, https://case.huyab.click | ToolHub; `/projects` showcase pings every app (`mytools/AGENTS.md:5-9`) |
 | `resume` | web (static assets) | https://resume.huyab.click, https://cv.huyab.click | Static CV (`resume/AGENTS.md:5-8`) |
 | `xo-expo` | expo | — (EAS Update) | Standalone tic-tac-toe, no backend (`xo-expo/AGENTS.md:5-8`) |
@@ -32,8 +32,8 @@ a cited file changes, update this map in the same change.
 
 Worker names differ from repo names in four places: `chia-keo` → `chiakeo`
 (`chia-keo/wrangler.toml:1`), `hooks` → `webhook-tester` (`hooks/wrangler.jsonc`),
-`mytools` → `case-converter` (`mytools/wrangler.jsonc`), `picaku-mul` → `pikachu-online`
-(`picaku-mul/wrangler.toml:1`). Service bindings reference the **worker** name.
+`mytools` → `case-converter` (`mytools/wrangler.jsonc`), `games` → `pikachu-online`
+(`games/wrangler.toml:1`). Service bindings reference the **worker** name.
 
 ## 2. Graph
 
@@ -55,7 +55,7 @@ graph LR
     SHARE["share<br/>share.huyab.click"]
     CARD["cardstat<br/>cardstats.huyab.click"]
     HOOKS["hooks<br/>hooks.huyab.click"]
-    GAMES["picaku-mul<br/>games.huyab.click"]
+    GAMES["games<br/>games.huyab.click"]
     TOOLS["mytools<br/>huyab.click"]
     CV["resume<br/>cv.huyab.click"]
   end
@@ -101,7 +101,7 @@ Edge sources:
 | Edge | Evidence |
 | --- | --- |
 | sso issues `huyab_sso` on `.huyab.click` | `sso/wrangler.jsonc` (`COOKIE_DOMAIN`), `sso/src/env.ts:13`, `sso/docs/INTEGRATION.md:33-34` |
-| apps fetch JWKS from sso | `ai-english/src/adapters/jose/ssoVerifier.js:5`, `chia-keo/worker/src/sso.ts:26`, `notes/worker/src/sso-verifier.js:20`, `monitor/server/src/index.ts:23`, `share/worker/src/sso-verifier.ts:14`, `cardstat/src/infrastructure/auth/sso-verifier.ts:26`, `hooks/src/adapters/outbound/security/sso-verifier.ts:30`, `picaku-mul/worker/sso.js:13`, `mailer/src/sso.ts:21` |
+| apps fetch JWKS from sso | `ai-english/src/adapters/jose/ssoVerifier.js:5`, `chia-keo/worker/src/sso.ts:26`, `notes/worker/src/sso-verifier.js:20`, `monitor/server/src/index.ts:23`, `share/worker/src/sso-verifier.ts:14`, `cardstat/src/infrastructure/auth/sso-verifier.ts:26`, `hooks/src/adapters/outbound/security/sso-verifier.ts:30`, `games/worker/sso.js:13`, `mailer/src/sso.ts:21` |
 | ai-english → mailer | `ai-english/wrangler.jsonc` (`services: MAILER → mailer`), `ai-english/src/adapters/mailer/mailerPort.js:11`, `ai-english/src/worker.js:72` |
 | chia-keo → mailer | `chia-keo/wrangler.toml` (`[[services]] MAILER → mailer`), `chia-keo/worker/src/routes/email-summary.ts:64-67` |
 | monitor → mailer | `monitor/wrangler.jsonc` (`services: MAILER → mailer`), `monitor/server/src/index.ts:54-60` |
@@ -205,12 +205,12 @@ Same SwiftUI template, zero dependencies, same `Auth.swift` / `API.swift` / `Log
 - **Data:** D1 `db` (`webhook_tester_` prefix), DO `EndpointHub`.
 - **Deploy:** Workers Builds on push to `main` (`hooks/AGENTS.md:62-63`).
 
-### picaku-mul
-- **Depends on:** sso, optional sign-in for history (`picaku-mul/worker/sso.js:1-13`, `picaku-mul/public/me.js:9`, `:43`); Durable Objects `Room`, `Top`, `MinerRoom`, `MineRoom`, `DiceRoom`, `CaroRoom`, `ShipRoom`, `NokiaRoom` (`picaku-mul/wrangler.toml`).
+### games
+- **Depends on:** sso, optional sign-in for history (`games/worker/sso.js:1-13`, `games/public/me.js:9`, `:43`); Durable Objects `Room`, `Top`, `MinerRoom`, `MineRoom`, `DiceRoom`, `CaroRoom`, `ShipRoom`, `NokiaRoom` (`games/wrangler.toml`).
 - **Depended on by:** none.
 - **Auth:** `huyab_sso` cookie (optional).
-- **Data:** DO SQLite only (no D1: "goi free da het quota D1", `picaku-mul/wrangler.toml`).
-- **Deploy:** Workers Builds (`picaku-mul/AGENTS.md:74`); CI waits for `/api/version` then smokes prod (`picaku-mul/.github/workflows/ci.yml:71-95`).
+- **Data:** DO SQLite only (no D1: "goi free da het quota D1", `games/wrangler.toml`).
+- **Deploy:** Workers Builds (`games/AGENTS.md:74`); CI waits for `/api/version` then smokes prod (`games/.github/workflows/ci.yml:71-95`).
 
 ### mytools
 - **Depends on:** D1 `db` (`projects` table) (`mytools/app/data/projects.ts:1-7`); KV `KV_GAMES`, `NOTES`; DOs `LotoGameRoom`, `OnlineCounter` (`mytools/wrangler.jsonc`); external Odoo JSON-RPC (`mytools/app/utils/odoo.ts:49`).
@@ -320,7 +320,7 @@ Tokens stay copy-paste for now (ui-kit is intentionally not a package,
   suite is GET-only, logged out, never writes (`sso/AGENTS.md:81-84`, `mailer/AGENTS.md:69-70`,
   `hooks/AGENTS.md:96-98`, `chia-keo/AGENTS.md:175`, `notes/AGENTS.md:58`,
   `share/AGENTS.md:56`, `monitor/AGENTS.md:84-85`, `mytools/AGENTS.md:103-106`,
-  `cardstat/AGENTS.md:105`, `resume/AGENTS.md:58-59`, `picaku-mul/AGENTS.md:107`).
+  `cardstat/AGENTS.md:105`, `resume/AGENTS.md:58-59`, `games/AGENTS.md:107`).
 - Write suites hard-fail on an `https://` base URL: `mailer/e2e/dev-smoke.mjs:6`,
   `hooks/e2e/dev-smoke.mjs:6`. `@huyab/e2e` exports this as `assertLocalOnly(baseUrl)`.
 - Local logged-in suites mint their own tokens / fake JWKS instead of touching the real
@@ -331,9 +331,9 @@ Tokens stay copy-paste for now (ui-kit is intentionally not a package,
 
 | Package | Replaces (copies today) |
 | --- | --- |
-| `@huyab/sso` | the former `sso/scaffold/cloudflare-worker/sso-verifier.js` + `session.js` (deleted on sso `chore/standardize`) and its copies: `notes/worker/src/sso-verifier.js`, `share/worker/src/sso-verifier.ts`, `cardstat/src/infrastructure/auth/sso-verifier.ts`, `hooks/src/adapters/outbound/security/sso-verifier.ts`, `mailer/src/sso.ts`, `chia-keo/worker/src/sso.ts`, `picaku-mul/worker/sso.js`; `jose`-based variants in `monitor/server/src/index.ts:19-41`, `ai-english/src/adapters/jose/ssoVerifier.js` |
-| `@huyab/e2e` | `e2e/chromium.mjs` (ai-english, cardstat, chia-keo, monitor, notes, picaku-mul, share, ui-kit; already removed from mytools and sso), `e2e/harness.mjs` (hooks, mailer, resume), server start/stop in each `e2e/run.mjs` |
-| `@huyab/config` | per-repo `biome.json` (ai-english, ai-english-expo, chia-keo, hooks, mailer, monitor, mytools, notes, picaku-mul, share, sso, ui-kit, xo-expo) and `tsconfig.json` strict settings |
+| `@huyab/sso` | the former `sso/scaffold/cloudflare-worker/sso-verifier.js` + `session.js` (deleted on sso `chore/standardize`) and its copies: `notes/worker/src/sso-verifier.js`, `share/worker/src/sso-verifier.ts`, `cardstat/src/infrastructure/auth/sso-verifier.ts`, `hooks/src/adapters/outbound/security/sso-verifier.ts`, `mailer/src/sso.ts`, `chia-keo/worker/src/sso.ts`, `games/worker/sso.js`; `jose`-based variants in `monitor/server/src/index.ts:19-41`, `ai-english/src/adapters/jose/ssoVerifier.js` |
+| `@huyab/e2e` | `e2e/chromium.mjs` (ai-english, cardstat, chia-keo, monitor, notes, games, share, ui-kit; already removed from mytools and sso), `e2e/harness.mjs` (hooks, mailer, resume), server start/stop in each `e2e/run.mjs` |
+| `@huyab/config` | per-repo `biome.json` (ai-english, ai-english-expo, chia-keo, hooks, mailer, monitor, mytools, notes, games, share, sso, ui-kit, xo-expo) and `tsconfig.json` strict settings |
 | `kit/.github/workflows/check.yml` | per-repo `.github/workflows/ci.yml` lint/check/build/e2e jobs |
 
 ## 6. How to add a new app
@@ -352,7 +352,7 @@ Tokens stay copy-paste for now (ui-kit is intentionally not a package,
    under `.huyab.click` is an allowed redirect.
 4. **Data.** Either a dedicated D1, or the shared `db` with a unique `<app>_` table prefix
    and create-only schema (never `DROP`) (`mailer/AGENTS.md:29-30`). Need more capacity
-   than free D1 → DO SQLite like `picaku-mul`.
+   than free D1 → DO SQLite like `games`.
 5. **Email.** Never hold `RESEND_API_KEY`. Add `"services": [{ "binding": "MAILER", "service": "mailer" }]`,
    `wrangler secret put MAILER_KEY` (= mailer's `INTERNAL_API_KEY`), call `POST /send` per 4.2.
 6. **UI.** Copy `ui-kit/src/styles/tokens.css` + needed components; change token values,

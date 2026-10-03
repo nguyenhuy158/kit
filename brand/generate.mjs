@@ -18,7 +18,7 @@ export const APPS = {
   share: { bg: "#e2cfff", badge: "S" },
   cardstat: { bg: "#fde68a", badge: "$" },
   hooks: { bg: "#c7f0ee", badge: "H" },
-  "picaku-mul": { bg: "#ffb5a7", badge: "G" },
+  games: { bg: "#ffb5a7", badge: "G" },
   mytools: { bg: "#d0f4de", badge: "T" },
   resume: { bg: "#f1e3d3", badge: "CV" },
   sso: { bg: "#d7d3ff", badge: "A" },
