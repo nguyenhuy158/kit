@@ -1,0 +1,12 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
+  "extends": ["@huyab/config/biome.json"],
+  "files": {
+    "includes": [
+      "!**/dist",
+      "!**/.wrangler",
+      "!**/*.generated.*",
+      "!!packages/config/biome.json"
+    ]
+  }
+}

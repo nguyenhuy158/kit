@@ -1,0 +1,14 @@
+{
+  "name": "@huyab/config",
+  "version": "0.1.0",
+  "description": "Shared Biome and TypeScript base configuration",
+  "type": "module",
+  "exports": {
+    "./biome.json": "./biome.json",
+    "./tsconfig.base.json": "./tsconfig.base.json"
+  },
+  "files": [
+    "biome.json",
+    "tsconfig.base.json"
+  ]
+}
