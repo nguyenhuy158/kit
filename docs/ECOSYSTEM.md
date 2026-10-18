@@ -24,6 +24,10 @@ a cited file changes, update this map in the same change.
 | `hooks` | worker (SSR HTML) | https://hooks.huyab.click | Webhook tester / inspector (`hooks/AGENTS.md:5-6`) |
 | `games` | web (worker + static) | https://games.huyab.click (+ `pikachu.huyab.click` 301) | Multiplayer browser games on Durable Objects (`games/AGENTS.md:5-10`, `games/wrangler.toml`) |
 | `mytools` | web (React Router SSR worker) | https://huyab.click, https://case.huyab.click | ToolHub; `/projects` showcase pings every app (`mytools/AGENTS.md:5-9`) |
+| `badminton` | worker | https://badminton.huyab.click | Tracker for two badminton groups: fund, sessions, SSO gate (`badminton/wrangler.jsonc`) |
+| `digest-vote` | worker | https://digest.huyab.click | Vote feedback on the morning digest, KV `VOTES` (`digest-vote/wrangler.jsonc`) |
+| `runlater` | worker (no route) | — | GitHub webhook job queue with a pull runner, own D1 `runlater` (`runlater/wrangler.jsonc`) |
+| `vm-setup/gate` | worker | dash., router., n8n., pass.huyab.click | `pipi-gate`: SSO + email allow-list in front of the Pipi tunnel, n8n/pass failover (`vm-setup/gate/README.md`) |
 | `resume` | web (static assets) | https://resume.huyab.click, https://cv.huyab.click | Static CV (`resume/AGENTS.md:5-8`) |
 | `xo-expo` | expo | — (EAS Update) | Standalone tic-tac-toe, no backend (`xo-expo/AGENTS.md:5-8`) |
 | `ui-kit` | lib (copy-paste) | — (gallery only, no deploy) | Source of truth for `--ui-*` design tokens + React components, copied into apps (`ui-kit/AGENTS.md:5-14`) |
@@ -120,7 +124,9 @@ Edge sources:
 Cloudflare account resources referenced below:
 
 - **D1 `db`** (`6eb9cfce-f6f3-4476-8e46-7c8e954d93c1`): shared; every app prefixes its tables (`sso_`, `mailer_`, `monitor_`, `webhook_tester_`, `notes_`, `share_`, `cardstat_`). Sources: `sso/schema.sql:4`, `mailer/schema.sql:1`, `monitor/schema.sql:4`, `hooks/schema.sql:6`, `notes/schema.sql:3`, `share/schema.sql:4`, `cardstat/migrations/0001_init.sql:1`. Exception: `cardstat/migrations/0002_auth.sql:3-52` created unprefixed `user`/`session`/`account`/`verification` tables in the shared DB.
-- **D1 `stitch-db`** (ai-english only), **D1 `chiakeo-db`** (chia-keo only).
+- **D1 `stitch-db`** (ai-english only), **D1 `chiakeo-db`** (chia-keo only), **D1 `runlater`** (runlater only).
+- **Migration history:** each app on `db` keeps its own `migrations_table` (`sso_migrations`, `mailer_migrations`, `monitor_migrations`, `webhook_tester_migrations`, `notes_migrations`, `share_migrations`, `cardstat_migrations`, `mytools_migrations`) and a `migrations/0000_baseline.sql` taken from production on 2026-10-18. The shared `d1_migrations` is legacy: it still holds cardstat's rows and three drizzle rows of an app that is not in `personal-projects/`.
+- **Legacy names kept on purpose:** cardstat's unprefixed `user` (its tables reference it, `cardstat/migrations/0005_drop_better_auth.sql`), mytools' unprefixed `projects`. Tables no repo here owns: `caro_*`, `shoperr_*` (shopee-tracker), `hono_auth_*`.
 
 ### sso
 - **Depends on:** Google OAuth (`sso/src/google.ts`); D1 `db` table `sso_users` (`sso/schema.sql:4`).
@@ -350,9 +356,21 @@ Tokens stay copy-paste for now (ui-kit is intentionally not a package,
    (`sso/docs/INTEGRATION.md:221-235`). Keep webhooks/health public. Logout must redirect
    to `${SSO_ISSUER}/logout?redirect_uri=…`. No change in `sso` is needed: any https host
    under `.huyab.click` is an allowed redirect.
-4. **Data.** Either a dedicated D1, or the shared `db` with a unique `<app>_` table prefix
-   and create-only schema (never `DROP`) (`mailer/AGENTS.md:29-30`). Need more capacity
-   than free D1 → DO SQLite like `games`.
+4. **Data.** `<app>` below is the app's table prefix (snake_case worker name).
+   - **D1:** the shared `db` with every table prefixed `<app>_`, create-only (never `DROP`
+     another app's table) (`mailer/AGENTS.md:29-30`). In `wrangler.jsonc` set
+     `"migrations_dir": "migrations"` and `"migrations_table": "<app>_migrations"`: the default
+     `d1_migrations` is keyed by file name, so another app's `0001_init.sql` would count as
+     applied. Change the schema only with `wrangler d1 migrations apply <binding> --remote`
+     (Workers Builds never runs it), never with a hand-run `schema.sql`.
+   - **Own D1 (`<app>-db`)** when the app may outgrow ~200 MB, writes heavily, or holds
+     sensitive data: D1 has no per-table permissions, so every Worker bound to `db` can
+     read `sso_users`. More than free D1 allows → DO SQLite like `games`.
+   - **R2 / KV:** one bucket (`<app>` or `<app>-<purpose>`) and one KV namespace per app.
+     R2 tokens can be scoped to a bucket, not to a prefix. Sync jobs use
+     `rclone sync --checksum --fast-list`; comparing modtimes costs one HEAD per file.
+   - **Free plan limits:** D1 500 MB per database, 5 GB per account; R2 10 GB, 1M Class A,
+     10M Class B operations per month; Workers 100k requests per day.
 5. **Email.** Never hold `RESEND_API_KEY`. Add `"services": [{ "binding": "MAILER", "service": "mailer" }]`,
    `wrangler secret put MAILER_KEY` (= mailer's `INTERNAL_API_KEY`), call `POST /send` per 4.2.
 6. **UI.** Copy `ui-kit/src/styles/tokens.css` + needed components; change token values,
