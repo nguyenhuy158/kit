@@ -55,8 +55,20 @@ for (const [app, spec] of Object.entries(APPS)) {
   mkdirSync(dir, { recursive: true });
   const svg = join(dir, "favicon.svg");
   writeFileSync(svg, logoSvg(spec));
-  for (const [file, px] of [["apple-touch-icon.png", 180], ["icon-512.png", 512], ["favicon-32.png", 32]]) {
-    execFileSync("rsvg-convert", ["-w", String(px), "-h", String(px), "-o", join(dir, file), svg]);
+  for (const [file, px] of [
+    ["apple-touch-icon.png", 180],
+    ["icon-512.png", 512],
+    ["favicon-32.png", 32],
+  ]) {
+    execFileSync("rsvg-convert", [
+      "-w",
+      String(px),
+      "-h",
+      String(px),
+      "-o",
+      join(dir, file),
+      svg,
+    ]);
   }
   console.log(`ok ${app}`);
 }
