@@ -24,6 +24,7 @@ export const APPS = {
   sso: { bg: "#d7d3ff", badge: "A" },
   mailer: { bg: "#ffdfd3", badge: "@" },
   "ui-kit": { bg: "#e4c1f9", badge: "UI" },
+  intake: { bg: "#dbe7a8", badge: "IN" },
 };
 
 export function logoSvg({ bg, badge }) {
