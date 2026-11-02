@@ -32,6 +32,7 @@ a cited file changes, update this map in the same change.
 | `xo-expo` | expo | — (EAS Update) | Standalone tic-tac-toe, no backend (`xo-expo/AGENTS.md:5-8`) |
 | `ui-kit` | lib (copy-paste) | — (gallery only, no deploy) | Source of truth for `--ui-*` design tokens + React components, copied into apps (`ui-kit/AGENTS.md:5-14`) |
 | `dev-notes` | docs | — | Markdown notes on shared conventions and library choices (`dev-notes/AGENTS.md:5-8`) |
+| `slack-plane-intake` | container (pipi) | https://intake.huyab.click | Slack requests from the BA turned into Plane tasks after a confirm on its UI; copies `ui-kit` tokens, notices go to Telegram via Hermes (`skills/plugins/workflow/skills/slack-plane-intake/SKILL.md`) |
 | `kit` | lib (pnpm workspace) | github:nguyenhuy158/kit | Shared code via git deps: `@huyab/config`, `@huyab/sso`, `@huyab/e2e`, reusable `check.yml` (this repo) |
 
 Worker names differ from repo names in four places: `chia-keo` → `chiakeo`

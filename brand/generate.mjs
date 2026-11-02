@@ -24,6 +24,7 @@ export const APPS = {
   sso: { bg: "#d7d3ff", badge: "A" },
   mailer: { bg: "#ffdfd3", badge: "@" },
   "ui-kit": { bg: "#e4c1f9", badge: "UI" },
+  intake: { bg: "#dbe7a8", badge: "IN" },
 };
 
 export function logoSvg({ bg, badge }) {
@@ -54,8 +55,20 @@ for (const [app, spec] of Object.entries(APPS)) {
   mkdirSync(dir, { recursive: true });
   const svg = join(dir, "favicon.svg");
   writeFileSync(svg, logoSvg(spec));
-  for (const [file, px] of [["apple-touch-icon.png", 180], ["icon-512.png", 512], ["favicon-32.png", 32]]) {
-    execFileSync("rsvg-convert", ["-w", String(px), "-h", String(px), "-o", join(dir, file), svg]);
+  for (const [file, px] of [
+    ["apple-touch-icon.png", 180],
+    ["icon-512.png", 512],
+    ["favicon-32.png", 32],
+  ]) {
+    execFileSync("rsvg-convert", [
+      "-w",
+      String(px),
+      "-h",
+      String(px),
+      "-o",
+      join(dir, file),
+      svg,
+    ]);
   }
   console.log(`ok ${app}`);
 }
