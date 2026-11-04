@@ -25,6 +25,7 @@ export const APPS = {
   mailer: { bg: "#ffdfd3", badge: "@" },
   "ui-kit": { bg: "#e4c1f9", badge: "UI" },
   intake: { bg: "#dbe7a8", badge: "IN" },
+  "tc-api-team": { bg: "#c7e8f3", badge: "TC" },
 };
 
 export function logoSvg({ bg, badge }) {
