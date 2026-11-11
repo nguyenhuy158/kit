@@ -72,14 +72,19 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # playwright-core ships no browser. Its own CLI installs the matching
-      # Chromium into ~/.cache/ms-playwright, where findChromium() looks.
-      # Fetch-only suites (no playwright-core) skip this.
       - name: Install Chromium
         run: |
-          if [ -x node_modules/.bin/playwright-core ]; then
-            pnpm exec playwright-core install --with-deps chromium
+          if [ ! -x node_modules/.bin/playwright-core ]; then exit 0; fi
+          if command -v google-chrome >/dev/null; then
+            echo "Using system $(google-chrome --version)"
+            exit 0
           fi
+          for attempt in 1 2 3; do
+            pnpm exec playwright-core install --with-deps chromium && exit 0
+            echo "Chromium install attempt $attempt failed, retrying"
+            sleep 15
+          done
+          exit 1
 
       - name: E2E
         run: pnpm e2e
