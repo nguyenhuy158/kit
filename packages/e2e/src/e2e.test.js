@@ -12,10 +12,10 @@ describe("assertLocalOnly", () => {
   });
 
   it.each([
-    "https://notes.huyab.click",
-    "http://staging.huyab.click",
+    "https://notes.huyab.cfd",
+    "http://staging.huyab.cfd",
     "http://127.0.0.1.nip.io:8787",
-    "http://localhost.huyab.click",
+    "http://localhost.huyab.cfd",
     "not a url",
   ])("refuses %s", (url) => {
     expect(() => assertLocalOnly(url)).toThrow(/refusing/);

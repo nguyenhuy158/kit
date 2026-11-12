@@ -1,5 +1,5 @@
 // Fake SSO issuer for local E2E: a throwaway RSA key, its JWKS served at
-// /.well-known/jwks.json, and `huyab_sso` tokens signed like auth.huyab.click.
+// /.well-known/jwks.json, and `huyab_sso` tokens signed like auth.huyab.cfd.
 // Start the app with SSO_ISSUER pointing here (`wrangler dev --var
 // SSO_ISSUER:<issuer>`) and it verifies signature/iss/exp exactly as in prod.
 import { generateKeyPairSync, randomUUID, sign } from "node:crypto";

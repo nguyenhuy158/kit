@@ -1,4 +1,4 @@
-# huyab.click ecosystem map
+# huyab.cfd ecosystem map
 
 How the repos under `personal-projects/` relate to each other: who calls whom, which
 contracts they share, and where `kit` fits. Every relationship cites the file that
@@ -9,30 +9,30 @@ a cited file changes, update this map in the same change.
 
 | Repo | Kind | Prod URL | Role |
 | --- | --- | --- | --- |
-| `sso` | worker | https://auth.huyab.click | Google OAuth, issues the domain-wide `huyab_sso` RS256 JWT, publishes JWKS (`sso/wrangler.jsonc`, `sso/AGENTS.md:5-8`) |
-| `mailer` | worker | https://mail.huyab.click (log page only) | The only holder of `RESEND_API_KEY`; `POST /send` for other Workers via Service Binding (`mailer/AGENTS.md:5-9`) |
-| `ai-english` | web (worker + SPA) | https://en.huyab.click | English learning app, AI tutor, streak-reminder cron (`ai-english/AGENTS.md:5-12`) |
+| `sso` | worker | https://auth.huyab.cfd | Google OAuth, issues the domain-wide `huyab_sso` RS256 JWT, publishes JWKS (`sso/wrangler.jsonc`, `sso/AGENTS.md:5-8`) |
+| `mailer` | worker | https://mail.huyab.cfd (log page only) | The only holder of `RESEND_API_KEY`; `POST /send` for other Workers via Service Binding (`mailer/AGENTS.md:5-9`) |
+| `ai-english` | web (worker + SPA) | https://en.huyab.cfd | English learning app, AI tutor, streak-reminder cron (`ai-english/AGENTS.md:5-12`) |
 | `ai-english-expo` | expo | — (EAS Update) | Mobile client of ai-english, no backend of its own (`ai-english-expo/AGENTS.md:5-7`) |
-| `chia-keo` | web (worker + SPA) | https://chiakeo.huyab.click | Group expense splitting + payment QR, MCP endpoint (`chia-keo/AGENTS.md:5-9`, `chia-keo/wrangler.toml`) |
+| `chia-keo` | web (worker + SPA) | https://chiakeo.huyab.cfd | Group expense splitting + payment QR, MCP endpoint (`chia-keo/AGENTS.md:5-9`, `chia-keo/wrangler.toml`) |
 | `chia-keo-ios` | ios | — (sideloaded IPA) | Native SwiftUI client of chia-keo (`chia-keo-ios/AGENTS.md:5-8`) |
-| `notes` | web (worker + SPA) | https://notes.huyab.click | Personal daily journal (`notes/AGENTS.md:5-7`) |
+| `notes` | web (worker + SPA) | https://notes.huyab.cfd | Personal daily journal (`notes/AGENTS.md:5-7`) |
 | `notes-ios` | ios | — (sideloaded IPA) | Native client of notes (`notes-ios/Notes/API.swift:149`) |
-| `monitor` | web (worker + SPA) | https://alert.huyab.click | Odoo `ir.cron` lateness monitor, emails alerts (`monitor/AGENTS.md:5-10`) |
+| `monitor` | web (worker + SPA) | https://alert.huyab.cfd | Odoo `ir.cron` lateness monitor, emails alerts (`monitor/AGENTS.md:5-10`) |
 | `monitor-ios` | ios | — (sideloaded IPA) | Native client of monitor (`monitor-ios/Monitor/API.swift:96`) |
-| `share` | web (worker + SPA) | https://share.huyab.click | Artifact hosting for AI agents, MCP + skill (`share/AGENTS.md:5-8`) |
-| `cardstat` | web (Next.js on OpenNext worker) | https://cardstats.huyab.click | Card spending stats (`cardstat/wrangler.jsonc`) |
-| `hooks` | worker (SSR HTML) | https://hooks.huyab.click | Webhook tester / inspector (`hooks/AGENTS.md:5-6`) |
-| `games` | web (worker + static) | https://games.huyab.click (+ `pikachu.huyab.click` 301) | Multiplayer browser games on Durable Objects (`games/AGENTS.md:5-10`, `games/wrangler.toml`) |
-| `mytools` | web (React Router SSR worker) | https://huyab.click, https://case.huyab.click | ToolHub; `/projects` showcase pings every app (`mytools/AGENTS.md:5-9`) |
-| `badminton` | worker | https://badminton.huyab.click | Tracker for two badminton groups: fund, sessions, SSO gate (`badminton/wrangler.jsonc`) |
-| `digest-vote` | worker | https://digest.huyab.click | Vote feedback on the morning digest, KV `VOTES` (`digest-vote/wrangler.jsonc`) |
+| `share` | web (worker + SPA) | https://share.huyab.cfd | Artifact hosting for AI agents, MCP + skill (`share/AGENTS.md:5-8`) |
+| `cardstat` | web (Next.js on OpenNext worker) | https://cardstats.huyab.cfd | Card spending stats (`cardstat/wrangler.jsonc`) |
+| `hooks` | worker (SSR HTML) | https://hooks.huyab.cfd | Webhook tester / inspector (`hooks/AGENTS.md:5-6`) |
+| `games` | web (worker + static) | https://games.huyab.cfd (+ `pikachu.huyab.cfd` 301) | Multiplayer browser games on Durable Objects (`games/AGENTS.md:5-10`, `games/wrangler.toml`) |
+| `mytools` | web (React Router SSR worker) | https://huyab.cfd, https://case.huyab.cfd | ToolHub; `/projects` showcase pings every app (`mytools/AGENTS.md:5-9`) |
+| `badminton` | worker | https://badminton.huyab.cfd | Tracker for two badminton groups: fund, sessions, SSO gate (`badminton/wrangler.jsonc`) |
+| `digest-vote` | worker | https://digest.huyab.cfd | Vote feedback on the morning digest, KV `VOTES` (`digest-vote/wrangler.jsonc`) |
 | `runlater` | worker (no route) | — | GitHub webhook job queue with a pull runner, own D1 `runlater` (`runlater/wrangler.jsonc`) |
-| `vm-setup/gate` | worker | dash., router., n8n., pass.huyab.click | `pipi-gate`: SSO + email allow-list in front of the Pipi tunnel, n8n/pass failover (`vm-setup/gate/README.md`) |
-| `resume` | web (static assets) | https://resume.huyab.click, https://cv.huyab.click | Static CV (`resume/AGENTS.md:5-8`) |
+| `vm-setup/gate` | worker | dash., router., n8n., pass.huyab.cfd | `pipi-gate`: SSO + email allow-list in front of the Pipi tunnel, n8n/pass failover (`vm-setup/gate/README.md`) |
+| `resume` | web (static assets) | https://resume.huyab.cfd, https://cv.huyab.cfd | Static CV (`resume/AGENTS.md:5-8`) |
 | `xo-expo` | expo | — (EAS Update) | Standalone tic-tac-toe, no backend (`xo-expo/AGENTS.md:5-8`) |
 | `ui-kit` | lib (copy-paste) | — (gallery only, no deploy) | Source of truth for `--ui-*` design tokens + React components, copied into apps (`ui-kit/AGENTS.md:5-14`) |
 | `dev-notes` | docs | — | Markdown notes on shared conventions and library choices (`dev-notes/AGENTS.md:5-8`) |
-| `slack-plane-intake` | container (pipi) | https://intake.huyab.click | Slack requests from the BA turned into Plane tasks after a confirm on its UI; copies `ui-kit` tokens, notices go to Telegram via Hermes (`skills/plugins/workflow/skills/slack-plane-intake/SKILL.md`) |
+| `slack-plane-intake` | container (pipi) | https://intake.huyab.cfd | Slack requests from the BA turned into Plane tasks after a confirm on its UI; copies `ui-kit` tokens, notices go to Telegram via Hermes (`skills/plugins/workflow/skills/slack-plane-intake/SKILL.md`) |
 | `kit` | lib (pnpm workspace) | github:nguyenhuy158/kit | Shared code via git deps: `@huyab/config`, `@huyab/sso`, `@huyab/e2e`, reusable `check.yml` (this repo) |
 
 Worker names differ from repo names in four places: `chia-keo` → `chiakeo`
@@ -48,21 +48,21 @@ pings.
 ```mermaid
 graph LR
   subgraph Identity_and_mail
-    SSO["sso<br/>auth.huyab.click"]
-    MAILER["mailer<br/>mail.huyab.click"]
+    SSO["sso<br/>auth.huyab.cfd"]
+    MAILER["mailer<br/>mail.huyab.cfd"]
   end
 
   subgraph Web_apps
-    AIE["ai-english<br/>en.huyab.click"]
-    CK["chia-keo<br/>chiakeo.huyab.click"]
-    NOTES["notes<br/>notes.huyab.click"]
-    MON["monitor<br/>alert.huyab.click"]
-    SHARE["share<br/>share.huyab.click"]
-    CARD["cardstat<br/>cardstats.huyab.click"]
-    HOOKS["hooks<br/>hooks.huyab.click"]
-    GAMES["games<br/>games.huyab.click"]
-    TOOLS["mytools<br/>huyab.click"]
-    CV["resume<br/>cv.huyab.click"]
+    AIE["ai-english<br/>en.huyab.cfd"]
+    CK["chia-keo<br/>chiakeo.huyab.cfd"]
+    NOTES["notes<br/>notes.huyab.cfd"]
+    MON["monitor<br/>alert.huyab.cfd"]
+    SHARE["share<br/>share.huyab.cfd"]
+    CARD["cardstat<br/>cardstats.huyab.cfd"]
+    HOOKS["hooks<br/>hooks.huyab.cfd"]
+    GAMES["games<br/>games.huyab.cfd"]
+    TOOLS["mytools<br/>huyab.cfd"]
+    CV["resume<br/>cv.huyab.cfd"]
   end
 
   subgraph Clients
@@ -80,7 +80,7 @@ graph LR
 
   D1[("D1 db<br/>6eb9cfce, table prefixes")]
 
-  SSO -- "Set-Cookie huyab_sso Domain=.huyab.click" --> AIE & CK & NOTES & MON & SHARE & CARD & HOOKS & GAMES & MAILER
+  SSO -- "Set-Cookie huyab_sso Domain=.huyab.cfd" --> AIE & CK & NOTES & MON & SHARE & CARD & HOOKS & GAMES & MAILER
   AIE & CK & NOTES & MON & SHARE & CARD & HOOKS & GAMES & MAILER -- "GET /.well-known/jwks.json" --> SSO
 
   AIE -- "service binding MAILER" --> MAILER
@@ -105,7 +105,7 @@ Edge sources:
 
 | Edge | Evidence |
 | --- | --- |
-| sso issues `huyab_sso` on `.huyab.click` | `sso/wrangler.jsonc` (`COOKIE_DOMAIN`), `sso/src/env.ts:13`, `sso/docs/INTEGRATION.md:33-34` |
+| sso issues `huyab_sso` on `.huyab.cfd` | `sso/wrangler.jsonc` (`COOKIE_DOMAIN`), `sso/src/env.ts:13`, `sso/docs/INTEGRATION.md:33-34` |
 | apps fetch JWKS from sso | `ai-english/src/adapters/jose/ssoVerifier.js:5`, `chia-keo/worker/src/sso.ts:26`, `notes/worker/src/sso-verifier.js:20`, `monitor/server/src/index.ts:23`, `share/worker/src/sso-verifier.ts:14`, `cardstat/src/infrastructure/auth/sso-verifier.ts:26`, `hooks/src/adapters/outbound/security/sso-verifier.ts:30`, `games/worker/sso.js:13`, `mailer/src/sso.ts:21` |
 | ai-english → mailer | `ai-english/wrangler.jsonc` (`services: MAILER → mailer`), `ai-english/src/adapters/mailer/mailerPort.js:11`, `ai-english/src/worker.js:72` |
 | chia-keo → mailer | `chia-keo/wrangler.toml` (`[[services]] MAILER → mailer`), `chia-keo/worker/src/routes/email-summary.ts:64-67` |
@@ -132,9 +132,9 @@ Cloudflare account resources referenced below:
 ### sso
 - **Depends on:** Google OAuth (`sso/src/google.ts`); D1 `db` table `sso_users` (`sso/schema.sql:4`).
 - **Depended on by:** every web app in section 2 and the three iOS apps (cookie + JWKS).
-- **Auth:** is the issuer. Secrets `JWT_PRIVATE_KEY`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` (`sso/AGENTS.md:43-44`). Redirect allow-list `ALLOWED_REDIRECT_SUFFIX=.huyab.click`, TTL 86400 s (`sso/wrangler.jsonc`).
+- **Auth:** is the issuer. Secrets `JWT_PRIVATE_KEY`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` (`sso/AGENTS.md:43-44`). Redirect allow-list `ALLOWED_REDIRECT_SUFFIX=.huyab.cfd`, TTL 86400 s (`sso/wrangler.jsonc`).
 - **Data:** D1 `db` (`sso_` prefix).
-- **Deploy:** `pnpm run deploy` (`sso/AGENTS.md:41`, `sso/README.md:35`); custom domain `auth.huyab.click`.
+- **Deploy:** `pnpm run deploy` (`sso/AGENTS.md:41`, `sso/README.md:35`); custom domain `auth.huyab.cfd`.
 - **Ships for consumers:** `sso/docs/INTEGRATION.md` and `sso/README.md`, which point relying apps at `@huyab/sso` (`sso/docs/INTEGRATION.md:83-96`, `sso/README.md:59-73`). The old copy-paste `sso/scaffold/cloudflare-worker/` was deleted on `chore/standardize`.
 - **kit:** `@huyab/config`, `@huyab/e2e` (`sso/package.json`), reusable `check.yml` (`sso/.github/workflows/ci.yml:17`). It does **not** use `@huyab/sso`: it signs and verifies its own tokens with the local key, with no JWKS fetch (`sso/AGENTS.md:15`).
 
@@ -144,17 +144,17 @@ Cloudflare account resources referenced below:
 - **Auth:** `/send` = service binding + `Authorization: Bearer INTERNAL_API_KEY` (`mailer/src/index.ts:230-233`); `GET /` = `huyab_sso` with `email == ADMIN_EMAIL` (`mailer/wrangler.jsonc`, `mailer/src/index.ts:212`).
 - **Data:** D1 `db`, table `mailer_sent_emails` (`mailer/schema.sql:1`).
 - **Deploy:** Cloudflare Workers Builds on push to `main` (`mailer/AGENTS.md:47-48`).
-- Note: the comment at `mailer/src/index.ts:226` says the Worker "has no route"; `mailer/wrangler.jsonc` does route `mail.huyab.click` (log page only). `/send` is still protected by the bearer.
+- Note: the comment at `mailer/src/index.ts:226` says the Worker "has no route"; `mailer/wrangler.jsonc` does route `mail.huyab.cfd` (log page only). `/send` is still protected by the bearer.
 
 ### ai-english
 - **Depends on:** sso (`ai-english/wrangler.jsonc` `SSO_ISSUER`/`SSO_AUDIENCE`, `ai-english/src/adapters/jose/ssoVerifier.js:5`); mailer via `MAILER` binding + secret `MAILER_KEY` (`ai-english/src/worker.js:72`); Workers AI `AI` (model in `MOCHI_MODEL`); cron `30 13 * * *` for streak reminders (`ai-english/wrangler.jsonc`, `ai-english/src/domain/usecases/sendStreakReminders.js`).
 - **Depended on by:** ai-english-expo (`ai-english-expo/src/api.js:9`).
 - **Auth:** `huyab_sso` is exchanged for a local `auth_token` cookie on `/api/auth/me` (`ai-english/src/adapters/http/router.js:392-398`); login goes `/api/auth/google` → sso (`router.js:383-386`); logout clears both via sso `/logout` (`router.js:415-425`).
 - **Data:** D1 `stitch-db` (migrations `data/migrations`), R2 `ai-english-vocab` (`ai-english/wrangler.jsonc`).
-- **Deploy:** Workers Builds on push to `main` (`ai-english/AGENTS.md:84`). Custom domain `en.huyab.click` is not declared in `wrangler.jsonc` [INFERENCE: attached in the dashboard], URL from `ai-english/AGENTS.md:5`.
+- **Deploy:** Workers Builds on push to `main` (`ai-english/AGENTS.md:84`). Custom domain `en.huyab.cfd` is not declared in `wrangler.jsonc` [INFERENCE: attached in the dashboard], URL from `ai-english/AGENTS.md:5`.
 
 ### ai-english-expo
-- **Depends on:** ai-english API `https://en.huyab.click` (`ai-english-expo/src/api.js:9`), login via WebView at `/api/auth/google` (`ai-english-expo/src/api.js:65`, `ai-english-expo/src/LoginScreen.js:18`).
+- **Depends on:** ai-english API `https://en.huyab.cfd` (`ai-english-expo/src/api.js:9`), login via WebView at `/api/auth/google` (`ai-english-expo/src/api.js:65`, `ai-english-expo/src/LoginScreen.js:18`).
 - **Depended on by:** none.
 - **Auth:** `auth_token` cookie shared from WebView into native cookie store (`ai-english-expo/AGENTS.md:9-13`).
 - **Data:** none.
@@ -170,9 +170,9 @@ Cloudflare account resources referenced below:
 ### chia-keo-ios / notes-ios / monitor-ios
 Same SwiftUI template, zero dependencies, same `Auth.swift` / `API.swift` / `LoginView.swift` / `make-ipa.sh` layout (`chia-keo-ios/AGENTS.md:10-13`).
 - **Depends on:** sso WebView login, then the app API:
-  - chia-keo-ios → `https://chiakeo.huyab.click`; installs `huyab_sso` in the cookie jar (`chia-keo-ios/ChiaKeo/Auth.swift:73-83`).
-  - notes-ios → `https://notes.huyab.click`; sends `Cookie: huyab_sso=<token>` explicitly, cookie jar off (`notes-ios/Notes/API.swift:190-197`).
-  - monitor-ios → `https://alert.huyab.click`; cookie jar + `Authorization: Bearer` (`monitor-ios/Monitor/API.swift:130-136`); server reads only the cookie (`monitor/server/src/index.ts:28-30`).
+  - chia-keo-ios → `https://chiakeo.huyab.cfd`; installs `huyab_sso` in the cookie jar (`chia-keo-ios/ChiaKeo/Auth.swift:73-83`).
+  - notes-ios → `https://notes.huyab.cfd`; sends `Cookie: huyab_sso=<token>` explicitly, cookie jar off (`notes-ios/Notes/API.swift:190-197`).
+  - monitor-ios → `https://alert.huyab.cfd`; cookie jar + `Authorization: Bearer` (`monitor-ios/Monitor/API.swift:130-136`); server reads only the cookie (`monitor/server/src/index.ts:28-30`).
 - **Depended on by:** none.
 - **Data:** token in Keychain (`chia-keo-ios/ChiaKeo/Auth.swift:60-62`).
 - **Deploy:** unsigned IPA via `make-ipa.sh`, signed with Sideloadly (`chia-keo-ios/AGENTS.md:54`, `notes-ios/AGENTS.md:51`, `monitor-ios/AGENTS.md:49`); CI `test.yml` on `macos-15`.
@@ -193,10 +193,10 @@ Same SwiftUI template, zero dependencies, same `Auth.swift` / `API.swift` / `Log
 
 ### share
 - **Depends on:** sso (`share/wrangler.jsonc`, `share/worker/src/sso-verifier.ts`).
-- **Depended on by:** AI agents via `share/mcp/index.mjs`, `share/scripts/share.sh`, `share/skills/share-artifact/SKILL.md` (all target `https://share.huyab.click`).
+- **Depended on by:** AI agents via `share/mcp/index.mjs`, `share/scripts/share.sh`, `share/skills/share-artifact/SKILL.md` (all target `https://share.huyab.cfd`).
 - **Auth:** `huyab_sso` cookie, or `Authorization: Bearer <master password>` + `X-Email` (`share/worker/src/index.ts:126-134`, `:341-350`).
 - **Data:** D1 `db` (`share_` prefix, `share/schema.sql`).
-- **Deploy:** `pnpm deploy` (build + `wrangler deploy`) (`share/AGENTS.md:36`); zone route `share.huyab.click/*`, not a custom domain (`share/wrangler.jsonc`).
+- **Deploy:** `pnpm deploy` (build + `wrangler deploy`) (`share/AGENTS.md:36`); zone route `share.huyab.cfd/*`, not a custom domain (`share/wrangler.jsonc`).
 
 ### cardstat
 - **Depends on:** sso (`cardstat/wrangler.jsonc` `SSO_ISSUER`, `cardstat/src/infrastructure/auth/sso-verifier.ts`).
@@ -207,7 +207,7 @@ Same SwiftUI template, zero dependencies, same `Auth.swift` / `API.swift` / `Log
 
 ### hooks
 - **Depends on:** sso (`hooks/src/config/env.ts:36`, `hooks/src/adapters/outbound/security/sso-verifier.ts`); Durable Object `EndpointHub` (`hooks/wrangler.jsonc`).
-- **Depended on by:** any external system posting to `https://hooks.huyab.click/hook/…` (`hooks/README.md:6`).
+- **Depended on by:** any external system posting to `https://hooks.huyab.cfd/hook/…` (`hooks/README.md:6`).
 - **Auth:** local `access_token` cookie or `huyab_sso`, first-seen SSO users provisioned (`hooks/src/adapters/inbound/http/middleware.ts:19-40`).
 - **Data:** D1 `db` (`webhook_tester_` prefix), DO `EndpointHub`.
 - **Deploy:** Workers Builds on push to `main` (`hooks/AGENTS.md:62-63`).
@@ -249,17 +249,17 @@ Same SwiftUI template, zero dependencies, same `Auth.swift` / `API.swift` / `Log
 
 | Item | Value | Source |
 | --- | --- | --- |
-| Issuer | `https://auth.huyab.click` | `sso/wrangler.jsonc` (`ISSUER`) |
-| Cookie | `huyab_sso`, `Domain=.huyab.click`, HttpOnly, Secure, SameSite=Lax | `sso/src/env.ts:13`, `sso/AGENTS.md:64`, `sso/wrangler.jsonc` (`COOKIE_DOMAIN`) |
+| Issuer | `https://auth.huyab.cfd` | `sso/wrangler.jsonc` (`ISSUER`) |
+| Cookie | `huyab_sso`, `Domain=.huyab.cfd`, HttpOnly, Secure, SameSite=Lax | `sso/src/env.ts:13`, `sso/AGENTS.md:64`, `sso/wrangler.jsonc` (`COOKIE_DOMAIN`) |
 | Algorithm | RS256; private key only in sso | `sso/src/jwt.ts:5`, `sso/AGENTS.md:65` |
-| JWKS | `https://auth.huyab.click/.well-known/jwks.json` | `sso/src/index.ts:92`, `sso/docs/INTEGRATION.md:42` |
-| Claims | `iss`, `sub` (stable numeric string, key users on it), `aud` = `huyab.click`, `email`, `name`, `picture`, `iat`, `exp` | `sso/docs/INTEGRATION.md:53-67` |
+| JWKS | `https://auth.huyab.cfd/.well-known/jwks.json` | `sso/src/index.ts:92`, `sso/docs/INTEGRATION.md:42` |
+| Claims | `iss`, `sub` (stable numeric string, key users on it), `aud` = `huyab.cfd`, `email`, `name`, `picture`, `iat`, `exp` | `sso/docs/INTEGRATION.md:53-67` |
 | Lifetime | 24 h (`SESSION_TTL_SECONDS=86400`) | `sso/wrangler.jsonc` |
-| Login | `GET /login?redirect_uri=<https URL under .huyab.click>` | `sso/docs/INTEGRATION.md:40`, `:45-46` |
+| Login | `GET /login?redirect_uri=<https URL under .huyab.cfd>` | `sso/docs/INTEGRATION.md:40`, `:45-46` |
 | Logout | `GET /logout?redirect_uri=…` (only the issuer can clear the cookie) | `sso/docs/INTEGRATION.md:41`, `:209-219` |
 | Session JSON | `GET /me` (server-side only, no CORS) | `sso/docs/INTEGRATION.md:43`, `:193-207` |
 | Required checks | RS256 signature vs JWKS, `iss`, `exp`; cache the key | `sso/docs/INTEGRATION.md:71-79` |
-| Optional checks | `aud == "huyab.click"` (enforced by mailer and ai-english only) | `mailer/src/sso.ts:5`, `:72`, `ai-english/wrangler.jsonc` (`SSO_AUDIENCE`) |
+| Optional checks | `aud == "huyab.cfd"` (enforced by mailer and ai-english only) | `mailer/src/sso.ts:5`, `:72`, `ai-english/wrangler.jsonc` (`SSO_AUDIENCE`) |
 | Non-browser transport | `Authorization: Bearer <same JWT>` (chia-keo only today) | `chia-keo/worker/src/sso.ts:62-68` |
 
 Changing claims, cookie attributes or JWKS shape is breaking for every app
@@ -267,7 +267,7 @@ Changing claims, cookie attributes or JWKS shape is breaking for every app
 `import { verifySsoToken, getClaimsFromRequest, readSsoToken, ssoUrl, SSO_COOKIE, DEFAULT_SSO_ISSUER } from "@huyab/sso"`
 (reads the cookie, then `Bearer`). Hono middleware lives on a subpath so non-Hono apps
 (cardstat/Next.js) don't pull in Hono: `import { requireUser, type SsoVariables } from "@huyab/sso/hono"`.
-`requireUser` reads the issuer from the `SSO_ISSUER` binding (fallback `https://auth.huyab.click`),
+`requireUser` reads the issuer from the `SSO_ISSUER` binding (fallback `https://auth.huyab.cfd`),
 sets `c.get("user")` to the `SsoClaims`, and returns `401 {"error":"unauthorized"}` otherwise.
 
 ### 4.2 mailer `POST /send`
@@ -286,7 +286,7 @@ Authorization: Bearer <MAILER_KEY>
 Content-Type: application/json
 
 { "to": "a@x.com" | ["a@x.com"], "subject": "…", "html": "…" | "text": "…",
-  "from"?: "…" (default DEFAULT_FROM=noreply@huyab.click), "replyTo"?: "…" }
+  "from"?: "…" (default DEFAULT_FROM=noreply@huyab.cfd), "replyTo"?: "…" }
 ```
 
 | Response | Meaning |
@@ -345,18 +345,18 @@ Tokens stay copy-paste for now (ui-kit is intentionally not a package,
 
 ## 6. How to add a new app
 
-1. **Name & domain.** Pick `<app>.huyab.click`. In `wrangler.jsonc` set `"workers_dev": false`
-   and `"routes": [{ "pattern": "<app>.huyab.click", "custom_domain": true }]`
+1. **Name & domain.** Pick `<app>.huyab.cfd`. In `wrangler.jsonc` set `"workers_dev": false`
+   and `"routes": [{ "pattern": "<app>.huyab.cfd", "custom_domain": true }]`
    (pattern: `notes/wrangler.jsonc`).
 2. **Scaffold tooling from kit.** `pnpm add -D "github:nguyenhuy158/kit#v0.1.0&path:packages/config"`;
    `biome.json` → `{ "extends": ["@huyab/config/biome.json"] }`; `tsconfig.json` extends
    `@huyab/config/tsconfig.base.json`. `.nvmrc` = `22`, pin `packageManager` pnpm.
-3. **Auth.** Add `"vars": { "SSO_ISSUER": "https://auth.huyab.click" }`; install `@huyab/sso`
+3. **Auth.** Add `"vars": { "SSO_ISSUER": "https://auth.huyab.cfd" }`; install `@huyab/sso`
    and guard Hono routes with `requireUser` from `@huyab/sso/hono` (non-Hono: call
    `getClaimsFromRequest` from `@huyab/sso`). Key users on `sub`, not email
    (`sso/docs/INTEGRATION.md:221-235`). Keep webhooks/health public. Logout must redirect
    to `${SSO_ISSUER}/logout?redirect_uri=…`. No change in `sso` is needed: any https host
-   under `.huyab.click` is an allowed redirect.
+   under `.huyab.cfd` is an allowed redirect.
 4. **Data.** `<app>` below is the app's table prefix (snake_case worker name).
    - **D1:** the shared `db` with every table prefixed `<app>_`, create-only (never `DROP`
      another app's table) (`mailer/AGENTS.md:29-30`). In `wrangler.jsonc` set
