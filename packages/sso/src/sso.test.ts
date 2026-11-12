@@ -36,7 +36,7 @@ function claimsFor(overrides: Record<string, unknown> = {}) {
   return {
     iss: issuer,
     sub: "42",
-    aud: "huyab.click",
+    aud: "huyab.cfd",
     email: "user@example.com",
     name: "User",
     iat: now,
@@ -89,7 +89,7 @@ describe("verifySsoToken", () => {
   it("enforces the audience only when one is requested", async () => {
     const token = mint(claimsFor({ aud: "other.app" }));
     expect(
-      await verifySsoToken(token, issuer, { audience: "huyab.click" }),
+      await verifySsoToken(token, issuer, { audience: "huyab.cfd" }),
     ).toBeNull();
     expect(await verifySsoToken(token, issuer)).not.toBeNull();
   });

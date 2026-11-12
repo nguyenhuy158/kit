@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-kit: the code shared by the `*.huyab.click` apps, as one pnpm workspace.
+kit: the code shared by the `*.huyab.cfd` apps, as one pnpm workspace.
 Consumers install each package as a git dependency pinned to a tag
 (`pnpm add "github:nguyenhuy158/kit#vX.Y.Z&path:packages/<name>"`), so there is
 no registry and no build step: packages ship their source.

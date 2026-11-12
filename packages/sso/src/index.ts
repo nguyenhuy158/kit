@@ -1,5 +1,5 @@
 /**
- * Verifies the domain-wide `huyab_sso` session issued by auth.huyab.click.
+ * Verifies the domain-wide `huyab_sso` session issued by auth.huyab.cfd.
  *
  * Tokens are RS256 JWTs. Relying apps only ever hold the issuer's public key
  * (fetched from its JWKS), so no app can mint a session another app accepts.
@@ -10,7 +10,7 @@
 export const SSO_COOKIE = "huyab_sso";
 
 /** Production issuer; apps override it through their `SSO_ISSUER` variable. */
-export const DEFAULT_SSO_ISSUER = "https://auth.huyab.click";
+export const DEFAULT_SSO_ISSUER = "https://auth.huyab.cfd";
 
 const JWKS_PATH = "/.well-known/jwks.json";
 const SIGNING_ALGORITHM = {
@@ -30,7 +30,7 @@ export type SsoClaims = {
 };
 
 export type VerifyOptions = {
-  /** When set, the token's `aud` claim must equal it (the issuer sets `huyab.click`). */
+  /** When set, the token's `aud` claim must equal it (the issuer sets `huyab.cfd`). */
   audience?: string;
 };
 

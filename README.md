@@ -1,13 +1,13 @@
 # kit
 
-Code shared by the `*.huyab.click` apps. One pnpm workspace, consumed straight
+Code shared by the `*.huyab.cfd` apps. One pnpm workspace, consumed straight
 from GitHub as git dependencies pinned to a tag — no registry, no build step.
 How the repos relate is mapped in [docs/ECOSYSTEM.md](docs/ECOSYSTEM.md).
 
 | Package | What it is |
 | --- | --- |
 | [`@huyab/config`](#huyabconfig) | Shared `biome.json` and `tsconfig.base.json` |
-| [`@huyab/sso`](#huyabsso) | Verify the `huyab_sso` cookie / Bearer JWT from auth.huyab.click; Hono `requireUser()` |
+| [`@huyab/sso`](#huyabsso) | Verify the `huyab_sso` cookie / Bearer JWT from auth.huyab.cfd; Hono `requireUser()` |
 | [`@huyab/e2e`](#huyabe2e) | Local E2E plumbing: dev-server lifecycle, Chromium lookup, fetch harness, local-only guard, fake SSO issuer |
 
 Install any package with its path inside this repo (quote it: `&` is special in
@@ -61,7 +61,7 @@ type Env = { Bindings: { SSO_ISSUER: string }; Variables: SsoVariables };
 const app = new Hono<Env>();
 
 // 401 {"error":"unauthorized"} unless the cookie or Bearer token verifies
-// against the SSO_ISSUER binding (fallback https://auth.huyab.click).
+// against the SSO_ISSUER binding (fallback https://auth.huyab.cfd).
 app.use("/api/*", requireUser());
 app.get("/api/me", (c) => c.json({ email: c.get("user").email }));
 ```
@@ -81,7 +81,7 @@ if (!claims) return Response.redirect(ssoUrl(env.SSO_ISSUER, "/login", request.u
 | `readSsoToken(headers)` | `huyab_sso` cookie, else `Authorization: Bearer`, else `null`. |
 | `getClaimsFromRequest(request, issuer, { audience? })` | `readSsoToken` + `verifySsoToken`. |
 | `ssoUrl(issuer, "/login" \| "/logout", redirectTo)` | Issuer URL that returns the visitor to `redirectTo`. |
-| `SSO_COOKIE`, `DEFAULT_SSO_ISSUER` | `"huyab_sso"`, `"https://auth.huyab.click"`. |
+| `SSO_COOKIE`, `DEFAULT_SSO_ISSUER` | `"huyab_sso"`, `"https://auth.huyab.cfd"`. |
 | `type SsoClaims`, `type VerifyOptions` | |
 | `@huyab/sso/hono`: `requireUser({ issuer?, audience? })`, `type SsoVariables`, `type RequireUserOptions` | Middleware; sets `c.get("user")`. `hono` is an optional peer dependency. |
 
