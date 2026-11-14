@@ -66,5 +66,7 @@ packages, tag `vX.Y.Z` on `main`, push the tag, then bump consumers.
 
 ## Agent-Specific Instructions
 
-Keep responses short and focused. Never commit secrets. Before changing an
+Keep responses short and focused. Never commit secrets. UI primitives and design
+tokens belong in `ui-kit`, not here and not hand-rolled in apps (see
+`docs/ECOSYSTEM.md` section 4.3). Before changing an
 export, check its consumers listed in `docs/ECOSYSTEM.md`.

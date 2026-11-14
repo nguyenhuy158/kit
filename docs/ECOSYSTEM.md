@@ -30,7 +30,7 @@ a cited file changes, update this map in the same change.
 | `vm-setup/gate` | worker | dash., router., n8n., pass.huyab.cfd | `pipi-gate`: SSO + email allow-list in front of the Pipi tunnel, n8n/pass failover (`vm-setup/gate/README.md`) |
 | `resume` | web (static assets) | https://resume.huyab.cfd, https://cv.huyab.cfd | Static CV (`resume/AGENTS.md:5-8`) |
 | `xo-expo` | expo | — (EAS Update) | Standalone tic-tac-toe, no backend (`xo-expo/AGENTS.md:5-8`) |
-| `ui-kit` | lib (copy-paste) | — (gallery only, no deploy) | Source of truth for `--ui-*` design tokens + React components, copied into apps (`ui-kit/AGENTS.md:5-14`) |
+| `ui-kit` | lib (copy-paste) | https://uikit.huyab.cfd (gallery) | Source of truth for `--ui-*` design tokens + React components, copied into apps; the only source of UI primitives (`ui-kit/AGENTS.md:5-14`) |
 | `dev-notes` | docs | — | Markdown notes on shared conventions and library choices (`dev-notes/AGENTS.md:5-8`) |
 | `slack-plane-intake` | container (pipi) | https://intake.huyab.cfd | Slack requests from the BA turned into Plane tasks after a confirm on its UI; copies `ui-kit` tokens, notices go to Telegram via Hermes (`skills/plugins/workflow/skills/slack-plane-intake/SKILL.md`) |
 | `kit` | lib (pnpm workspace) | github:nguyenhuy158/kit | Shared code via git deps: `@huyab/config`, `@huyab/sso`, `@huyab/e2e`, reusable `check.yml` (this repo) |
@@ -235,7 +235,7 @@ Same SwiftUI template, zero dependencies, same `Auth.swift` / `API.swift` / `Log
 - **Depends on:** nothing (no backend, `xo-expo/AGENTS.md:5-8`). **Deploy:** EAS Update (`xo-expo/app.json:36-37`).
 
 ### ui-kit
-- **Depends on:** nothing at runtime. **Depended on by:** copies in ai-english, chia-keo, notes, monitor, share, cardstat, mytools (section 2). **Deploy:** none (`ui-kit/AGENTS.md:65`).
+- **Depends on:** nothing at runtime. **Depended on by:** copies in ai-english, chia-keo, notes, monitor, share, cardstat, mytools (section 2). **Deploy:** gallery only, Worker `ui-kit` at https://uikit.huyab.cfd (`ui-kit/wrangler.jsonc`).
 
 ### dev-notes
 - Docs only (`dev-notes/AGENTS.md:5-8`). Conventions in `dev-notes/conventions.md`.
@@ -301,7 +301,14 @@ Sources: `mailer/src/index.ts:180-195` (body type and validator), `mailer/src/in
 `MAILER_KEY` note). Reference callers: `ai-english/src/adapters/mailer/mailerPort.js`,
 `monitor/server/src/index.ts:54-60`, `chia-keo/worker/src/routes/email-summary.ts:64`.
 
-### 4.3 Design tokens
+### 4.3 Design tokens and UI components
+
+- **Every app with a UI must use `ui-kit`** for tokens and UI primitives (Button, Modal,
+  Menu, DatePicker, ...). Copy the file you need and own the copy.
+- If an app needs a primitive that `ui-kit` lacks, add it to `ui-kit` first (generic API,
+  Gallery demo), then copy it. Do not hand-roll or fork a primitive inside an app
+  (`ui-kit/AGENTS.md`, Agent-Specific Instructions).
+- See the live gallery: https://uikit.huyab.cfd.
 
 - Source of truth: `ui-kit/src/styles/tokens.css` (`ui-kit/AGENTS.md:12`).
 - Fixed names: `--ui-bg`, `--ui-surface`, `--ui-surface-muted`, `--ui-fg`, `--ui-fg-muted`,

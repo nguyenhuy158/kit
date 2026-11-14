@@ -17,6 +17,14 @@ the shell):
 pnpm add "github:nguyenhuy158/kit#v0.1.0&path:packages/<name>"
 ```
 
+## UI components: use `ui-kit`
+
+kit has no UI code. Every app with a UI must use
+[`ui-kit`](https://github.com/nguyenhuy158/ui-kit) (gallery:
+https://uikit.huyab.cfd) for design tokens and UI primitives. It is copy-paste, not
+a package. If a primitive is missing, add it to `ui-kit` first, then copy it into the
+app. Do not hand-roll one in the app. Details: `docs/ECOSYSTEM.md` section 4.3.
+
 ## `@huyab/config`
 
 ```sh
