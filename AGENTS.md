@@ -25,10 +25,20 @@ packages/
   check.yml                # Reusable workflow (workflow_call) used by every app repo
   ci.yml                   # This repo's CI, calling check.yml
 docs/ECOSYSTEM.md          # Map of all personal repos and how they relate
+docs/AGENTS-SKELETON.md     # Section order every repo's AGENTS.md follows
 ```
 
 Rule for adding code: extract only what already exists in at least two repos,
 copying the best existing implementation. No speculative abstractions.
+
+## Ecosystem
+
+See the [huyab.cfd ecosystem map](docs/ECOSYSTEM.md) for how all personal repos connect.
+
+- Packages: `@huyab/config`, `@huyab/sso`, `@huyab/e2e`, reusable CI `check.yml`.
+- Talks to: nothing at runtime. Every `*.huyab.cfd` app repo installs these as git
+  dependencies pinned to a tag (consumers per package: `docs/ECOSYSTEM.md`).
+- UI components are not here: they live in `ui-kit` (https://uikit.huyab.cfd).
 
 ## Build, Test, and Development Commands
 
