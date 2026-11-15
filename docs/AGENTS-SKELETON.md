@@ -10,7 +10,7 @@ example, a lib with no deploy has no `Deploy & CI`).
 | 1 | `## Project Structure & Module Organization` | What the repo is, file tree |
 | 2 | `## Ecosystem` | Link to `kit/docs/ECOSYSTEM.md`, what it talks to |
 | 3 | `## Build, Test, and Development Commands` | `pnpm` scripts |
-| 4 | `## Coding Style & Naming Conventions` | Includes the `ui-kit` rule for apps with a UI |
+| 4 | `## Coding Style & Naming Conventions` | Includes the `ui-kit` rule for apps with a UI, and its grid (4 columns on mobile, 12 from 48rem) |
 | 5 | `## Testing Guidelines` | Unit and e2e |
 | 6 | `## Commit & Pull Request Guidelines` | Conventional Commits with an emoji |
 | 7 | `## Deploy & CI` | Every repo: CI (lint + check), Cloudflare Workers Builds for repos that deploy, no local deploy |
