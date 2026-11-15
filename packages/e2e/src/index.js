@@ -10,3 +10,9 @@ export {
 } from "./harness.js";
 export { freePort, run, startServer } from "./server.js";
 export { startSsoMock } from "./sso-mock.js";
+export {
+  assertFitsViewport,
+  collectOverflowOffenders,
+  DEFAULT_VIEWPORTS,
+  findScrollOverflow,
+} from "./viewport.js";

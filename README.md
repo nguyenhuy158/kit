@@ -149,6 +149,8 @@ finish();
 | `BASE`, `test`, `assert`, `request`, `expectStatus`, `finish` | Fetch harness; `BASE` is `E2E_BASE_URL` (default `http://127.0.0.1:8787`). |
 | `assertLocalOnly(baseUrl = BASE)` | Throws unless the host is `127.0.0.1` or `localhost`. |
 | `startSsoMock()` | Fake issuer on a free port: `{ issuer, mintToken(email, name?), close() }`. |
+| `assertFitsViewport(page, { viewports?, ignore?, label? })` | Playwright page check: at phone (390x844), small phone (360x640) and desktop (1280x720) the page and every `overflow: auto/scroll` pane must not scroll. `ignore` takes CSS selectors that may scroll on purpose (a form Sheet, a help page). Restores the viewport; throws naming the viewport and element. |
+| `findScrollOverflow(page, options?)`, `DEFAULT_VIEWPORTS` | Same check, returns the failing viewports instead of throwing. |
 
 ## Reusable CI
 

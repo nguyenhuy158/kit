@@ -1,6 +1,11 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { assertLocalOnly } from "./harness.js";
 import { freePort, startServer } from "./server.js";
+import {
+  assertFitsViewport,
+  collectOverflowOffenders,
+  findScrollOverflow,
+} from "./viewport.js";
 
 describe("assertLocalOnly", () => {
   it.each([
@@ -47,5 +52,134 @@ describe("startServer", () => {
     });
 
     await expect(start).rejects.toThrow(/exited early \(3\)/);
+  });
+});
+
+describe("viewport helpers", () => {
+  /** @param {Record<string, unknown>} overrides */
+  const box = (overrides) => ({
+    tagName: "DIV",
+    scrollHeight: 100,
+    clientHeight: 100,
+    scrollWidth: 100,
+    clientWidth: 100,
+    style: { overflowX: "visible", overflowY: "visible" },
+    getAttribute: () => null,
+    id: "",
+    closest: () => null,
+    ...overrides,
+  });
+
+  /** @param {{ root?: object, elements: object[] }} dom */
+  const stubDom = ({ root, elements }) => {
+    vi.stubGlobal("window", { innerHeight: 800, innerWidth: 400 });
+    vi.stubGlobal("document", {
+      documentElement: { scrollHeight: 800, scrollWidth: 400, ...root },
+      body: { querySelectorAll: () => elements },
+    });
+    vi.stubGlobal("getComputedStyle", (/** @type {any} */ el) => el.style);
+  };
+
+  afterEach(() => vi.unstubAllGlobals());
+
+  it("reports nothing for a screen that fits", () => {
+    stubDom({ elements: [box({})] });
+    expect(collectOverflowOffenders([])).toEqual([]);
+  });
+
+  it("reports page scroll in both directions", () => {
+    stubDom({ root: { scrollHeight: 900, scrollWidth: 500 }, elements: [] });
+    expect(collectOverflowOffenders([])).toEqual([
+      "page (vertical)",
+      "page (horizontal)",
+    ]);
+  });
+
+  it("reports a scrollable pane but not clipped overflow", () => {
+    stubDom({
+      elements: [
+        box({
+          id: "list",
+          scrollHeight: 300,
+          style: { overflowX: "visible", overflowY: "auto" },
+        }),
+        box({
+          scrollHeight: 300,
+          style: { overflowX: "hidden", overflowY: "hidden" },
+        }),
+      ],
+    });
+    expect(collectOverflowOffenders([])).toEqual(["div[list] (vertical)"]);
+  });
+
+  it("skips elements inside an ignored selector", () => {
+    stubDom({
+      elements: [
+        box({
+          scrollHeight: 300,
+          style: { overflowX: "visible", overflowY: "scroll" },
+          closest: (/** @type {string} */ selector) =>
+            selector === "[role=dialog]" ? {} : null,
+        }),
+      ],
+    });
+    expect(collectOverflowOffenders(["[role=dialog]"])).toEqual([]);
+  });
+
+  /** @param {Record<number, string[]>} offendersByWidth */
+  const fakePage = (offendersByWidth) => {
+    let size = { width: 1000, height: 1000 };
+    /** @type {number[]} */
+    const sizes = [];
+    return {
+      sizes,
+      viewportSize: () => size,
+      setViewportSize: async (
+        /** @type {{ width: number, height: number }} */ next,
+      ) => {
+        size = next;
+        sizes.push(next.width);
+      },
+      evaluate: async (
+        /** @type {unknown} */ fn,
+        /** @type {unknown} */ arg,
+      ) =>
+        fn === collectOverflowOffenders
+          ? (offendersByWidth[size.width] ?? [])
+          : arg,
+    };
+  };
+
+  it("lists failing viewports and restores the original size", async () => {
+    const page = fakePage({ 390: ["page (vertical)"] });
+    const failures = await findScrollOverflow(page, {
+      viewports: [
+        { name: "phone", width: 390, height: 844 },
+        { name: "desktop", width: 1280, height: 720 },
+      ],
+    });
+    expect(failures).toEqual([
+      { viewport: "phone", offenders: ["page (vertical)"] },
+    ]);
+    expect(page.sizes).toEqual([390, 1280, 1000]);
+  });
+
+  it("assertFitsViewport throws with the viewport and offender", async () => {
+    const page = fakePage({ 390: ["div[list] (vertical)"] });
+    await expect(
+      assertFitsViewport(page, {
+        label: "Chi tab",
+        viewports: [{ name: "phone", width: 390, height: 844 }],
+      }),
+    ).rejects.toThrow(/Chi tab.*phone: div\[list\] \(vertical\)/);
+  });
+
+  it("assertFitsViewport passes when nothing scrolls", async () => {
+    const page = fakePage({ 390: [] });
+    await expect(
+      assertFitsViewport(page, {
+        viewports: [{ name: "phone", width: 390, height: 844 }],
+      }),
+    ).resolves.toBeUndefined();
   });
 });

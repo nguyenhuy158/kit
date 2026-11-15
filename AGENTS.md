@@ -21,6 +21,7 @@ packages/
     src/chromium.js        #   findChromium
     src/harness.js         #   BASE, test/assert/request/expectStatus/finish, assertLocalOnly
     src/sso-mock.js        #   startSsoMock: fake issuer + JWKS + token minting
+    src/viewport.js        #   assertFitsViewport: one screen, no scrolling (see ECOSYSTEM 4.5)
 .github/workflows/
   check.yml                # Reusable workflow (workflow_call) used by every app repo
   ci.yml                   # This repo's CI, calling check.yml
@@ -85,5 +86,6 @@ local machine. See `docs/AGENTS-SKELETON.md` (Delivery rule).
 
 Keep responses short and focused. Never commit secrets. UI primitives and design
 tokens belong in `ui-kit`, not here and not hand-rolled in apps (see
-`docs/ECOSYSTEM.md` section 4.3). Before changing an
+`docs/ECOSYSTEM.md` section 4.3). Every screen fits one viewport with no
+scrolling (`docs/ECOSYSTEM.md` section 4.5). Before changing an
 export, check its consumers listed in `docs/ECOSYSTEM.md`.

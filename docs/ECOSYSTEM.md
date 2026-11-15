@@ -344,6 +344,19 @@ Tokens stay copy-paste for now (ui-kit is intentionally not a package,
   sso (`sso/AGENTS.md:76-80`, `notes/e2e/sso-mock.mjs`, `share/e2e/sso-mock.mjs`,
   `cardstat/.github/workflows/ci.yml:112`).
 
+### 4.5 One screen, no scrolling
+
+- Every screen fits one viewport, on phones and on desktop. Neither the page nor any pane
+  inside it scrolls. A list that can grow is split into pages, not scrolled.
+- Build it with ui-kit `Screen` (frame: fixed header and footer, middle clipped) and
+  `PagedList` (rows per page computed from the free height; fixed `rowHeight`).
+- Exceptions: reading-only pages (help, legal) and the inside of a Sheet or Modal that holds
+  a form. Pass them as `ignore` selectors.
+- Check it in e2e with `assertFitsViewport(page)` from `@huyab/e2e` (phone, small phone,
+  desktop). Run it once per tab or screen, after the data has loaded.
+- Limit: `overflow: hidden` clipping is not reported, so a page that hides content still
+  passes. Use `PagedList`, and look at screenshots.
+
 ## 5. kit packages: what they replace
 
 | Package | Replaces (copies today) |
@@ -389,7 +402,7 @@ Tokens stay copy-paste for now (ui-kit is intentionally not a package,
 7. **E2E.** Add `e2e/run.mjs` using `@huyab/e2e` (`run`, `startServer`, `freePort`, `findChromium`,
    `startSsoMock`, harness `BASE`/`test`/`assert`/`request`/`expectStatus`/`finish`);
    `readonly-smoke.mjs` GET-only for `pnpm e2e:prod`; any writing suite calls
-   `assertLocalOnly(baseUrl)` first (4.4).
+   `assertLocalOnly(baseUrl)` first (4.4). UI screens call `assertFitsViewport(page)` (4.5).
 8. **CI.** `.github/workflows/ci.yml` calls
    `nguyenhuy158/kit/.github/workflows/check.yml@v0.1.0` with `run-test` / `run-build` /
    `run-e2e`. Deploy stays in Cloudflare Workers Builds (connect the repo in the dashboard);
