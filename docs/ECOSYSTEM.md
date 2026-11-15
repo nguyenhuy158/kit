@@ -27,7 +27,7 @@ endpoint table on one page. Update it together with this file.
 | `hooks` | worker (SSR HTML) | https://hooks.huyab.cfd | Webhook tester / inspector (`hooks/AGENTS.md:5-6`) |
 | `games` | web (worker + static) | https://games.huyab.cfd (+ `pikachu.huyab.cfd` 301) | Multiplayer browser games on Durable Objects (`games/AGENTS.md:5-10`, `games/wrangler.toml`) |
 | `huyabhome` | web (React Router SSR worker) | https://huyab.cfd, https://case.huyab.cfd | ToolHub; `/projects` showcase pings every app (`huyabhome/AGENTS.md:5-9`) |
-| `badminton` | worker | https://badminton.huyab.cfd | Tracker for two badminton groups: fund, sessions, SSO gate (`badminton/wrangler.jsonc`) |
+| `badminton` | worker (public repo) | https://badminton.huyab.cfd | Tracker for two badminton groups: fund, sessions, SSO gate. Group data lives in Workers KV `badminton-data`, never in the repo. Planned: first cron spoke, absorbs the Alobo court scan of `caulong.huyab.cfd` (`badminton/wrangler.jsonc`, `badminton/AGENTS.md`) |
 | `digest-vote` | worker | https://digest.huyab.cfd | Vote feedback on the morning digest, KV `VOTES` (`digest-vote/wrangler.jsonc`) |
 | `runlater` | worker (no route) | — | GitHub webhook job queue with a pull runner, own D1 `runlater` (`runlater/wrangler.jsonc`) |
 | `vm-setup/gate` | worker | dash., router., n8n., pass.huyab.cfd | `pipi-gate`: SSO + email allow-list in front of the Pipi tunnel, n8n/pass failover (`vm-setup/gate/README.md`) |
@@ -360,9 +360,8 @@ with `git rev-parse HEAD`; a 200 alone only proves some version is serving.
 `@huyab/e2e` has `expectDeployed(baseUrl)` for the smoke suites. Exempt: native
 clients (no server), static pages with no Worker code, and `docs`-only repos.
 
-Today: chia-keo, notes, monitor, games and ai-english have the routes. sso, mailer,
-share, hooks, huyabhome, cardstat, badminton, digest-vote, runlater and resume do not
-yet.
+Today: chia-keo, notes, monitor, games, ai-english and badminton have the routes. sso,
+mailer, share, hooks, huyabhome, cardstat, digest-vote, runlater and resume do not yet.
 
 ### 4.5 Cron hub and spokes
 

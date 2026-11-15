@@ -90,7 +90,7 @@ Own D1 databases, not in the shared `db`: `stitch-db` (ai-english), `chiakeo-db`
 | huyabhome | `huyab.cfd` `/api/projects-status` | No SSO. Pings every app in the D1 `projects` table. |
 | pipi-gate | `dash.` `router.` `n8n.` `pass.huyab.cfd` | SSO + email allow-list in front of the Pipi tunnel, failover for n8n and pass. |
 | slack-plane-intake | `intake.huyab.cfd` | Slack requests become Plane tasks after a confirm on its UI. Notices go to Telegram (Hermes). Container on pipi. |
-| badminton | `badminton.huyab.cfd` | SSO gate. Fund and sessions of two badminton groups. |
+| badminton | `badminton.huyab.cfd` | SSO gate. Fund and sessions of two badminton groups, read from KV `badminton-data` (repo is public, so no data in it). `/api/version` and `/api/health` are public. |
 | digest-vote | `digest.huyab.cfd` | Votes on the morning digest, stored in KV `VOTES`. |
 | runlater | no route | Job queue fed by GitHub webhooks, a runner pulls jobs. Own D1 `runlater`. |
 | resume | `resume.huyab.cfd` `cv.huyab.cfd` | Static CV, no dependencies. |
