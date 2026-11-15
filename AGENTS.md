@@ -74,6 +74,13 @@ Conventional Commits with an emoji and a scope, header under 80 characters,
 e.g. `✨ feat(sso): add audience check`. To release: bump `version` in changed
 packages, tag `vX.Y.Z` on `main`, push the tag, then bump consumers.
 
+## Deploy & CI
+
+CI only (`.github/workflows/ci.yml` calls `check.yml`). `kit` has no deploy: a
+release is a tag pushed to `main`. Every repo that uses `kit` must run CI with
+lint and check, and deploy only through Cloudflare Workers Builds, never from a
+local machine. See `docs/AGENTS-SKELETON.md` (Delivery rule).
+
 ## Agent-Specific Instructions
 
 Keep responses short and focused. Never commit secrets. UI primitives and design
