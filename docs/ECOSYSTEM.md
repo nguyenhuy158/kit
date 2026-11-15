@@ -354,6 +354,11 @@ can be checked without guessing and `pnpm e2e:prod` can run them against product
 | `GET /api/version` | `200` JSON with the build baked in at build time: `commit` (full SHA, never empty), `shortCommit`, `branch`, `builtAt`. A `scripts/build-info.mjs` writes it before every `check`, `build`, `test`. It is never read from the request. Reference: `chia-keo/scripts/build-info.mjs`. |
 | `GET /api/health` | `200 { "ok": true }` when the app and its dependencies (D1, KV) work. On failure `500 { "ok": false, "hint": "..." }`. No secrets and no user data in either answer. |
 
+`build-info.generated.ts` is gitignored, and Workers Builds runs `npx wrangler deploy` or
+`npx wrangler versions upload` without the pnpm scripts. So every app also sets
+`"build": { "command": "node scripts/build-info.mjs" }` in `wrangler.jsonc`; without it the
+file is missing and the build fails (seen on sso#7).
+
 Both stay outside the SSO gate (`Keep webhooks/health public`, section 6 step 3), for
 example registered before the auth middleware. Check a deploy by comparing `commit`
 with `git rev-parse HEAD`; a 200 alone only proves some version is serving.
