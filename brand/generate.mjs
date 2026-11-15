@@ -19,7 +19,7 @@ export const APPS = {
   cardstat: { bg: "#fde68a", badge: "$" },
   hooks: { bg: "#c7f0ee", badge: "H" },
   games: { bg: "#ffb5a7", badge: "G" },
-  mytools: { bg: "#d0f4de", badge: "T" },
+  huyabhome: { bg: "#d0f4de", badge: "T" },
   resume: { bg: "#f1e3d3", badge: "CV" },
   sso: { bg: "#d7d3ff", badge: "A" },
   mailer: { bg: "#ffdfd3", badge: "@" },
