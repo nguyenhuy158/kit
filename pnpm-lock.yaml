@@ -26,6 +26,8 @@ importers:
 
   packages/config: {}
 
+  packages/cron: {}
+
   packages/e2e: {}
 
   packages/sso:

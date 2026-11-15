@@ -344,11 +344,23 @@ Tokens stay copy-paste for now (ui-kit is intentionally not a package,
   sso (`sso/AGENTS.md:76-80`, `notes/e2e/sso-mock.mjs`, `share/e2e/sso-mock.mjs`,
   `cardstat/.github/workflows/ci.yml:112`).
 
+### 4.5 Cron hub and spokes
+
+Planned, not deployed yet. One hub Worker owns the only cron trigger (`* * * * *`).
+It sends `POST /__cron/tick` with `Authorization: Bearer HUB_KEY` and
+`{ "scheduledTime": <ms> }` to every spoke through a service binding. A spoke keeps its
+schedule in its own code, runs the jobs that are due at that minute and ignores the
+rest. Implemented by `@huyab/cron` (`handleTick` on the spoke, `dispatchTick` on the
+hub). A job must be safe to run twice (the cron can fire twice; `dedupe` helps).
+The tick route is reachable only by the hub: the bearer is checked, and the spoke has
+no public route for it.
+
 ## 5. kit packages: what they replace
 
 | Package | Replaces (copies today) |
 | --- | --- |
 | `@huyab/sso` | the former `sso/scaffold/cloudflare-worker/sso-verifier.js` + `session.js` (deleted on sso `chore/standardize`) and its copies: `notes/worker/src/sso-verifier.js`, `share/worker/src/sso-verifier.ts`, `cardstat/src/infrastructure/auth/sso-verifier.ts`, `hooks/src/adapters/outbound/security/sso-verifier.ts`, `mailer/src/sso.ts`, `chia-keo/worker/src/sso.ts`, `games/worker/sso.js`; `jose`-based variants in `monitor/server/src/index.ts:19-41`, `ai-english/src/adapters/jose/ssoVerifier.js` |
+| `@huyab/cron` | nothing yet. New package for the cron hub and its spokes (section 4.5) |
 | `@huyab/e2e` | `e2e/chromium.mjs` (ai-english, cardstat, chia-keo, monitor, notes, games, share, ui-kit; already removed from huyabhome and sso), `e2e/harness.mjs` (hooks, mailer, resume), server start/stop in each `e2e/run.mjs` |
 | `@huyab/config` | per-repo `biome.json` (ai-english, ai-english-expo, chia-keo, hooks, mailer, monitor, huyabhome, notes, games, share, sso, ui-kit, xo-expo) and `tsconfig.json` strict settings |
 | `kit/.github/workflows/check.yml` | per-repo `.github/workflows/ci.yml` lint/check/build/e2e jobs |

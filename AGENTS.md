@@ -16,6 +16,11 @@ packages/
     src/index.ts           #   verifySsoToken, readSsoToken, getClaimsFromRequest, ssoUrl
     src/hono.ts            #   @huyab/sso/hono: requireUser() middleware (hono = optional peer)
     src/sso.test.ts        #   RS256 key generated per run, JWKS served by a stubbed fetch
+  cron/                    # @huyab/cron — TypeScript source, no dependencies, runs on Workers
+    src/schedule.ts        #   isDue (5-field cron in a time zone), parseSchedule
+    src/spoke.ts           #   handleTick: auth, run due jobs, ignore the rest, dedupe per minute
+    src/hub.ts             #   dispatchTick: send the tick to every spoke with a timeout
+    src/cron.test.ts       #   Fake clock and fake spokes, no network
   e2e/                     # @huyab/e2e — plain ESM JavaScript for Node scripts
     src/server.js          #   startServer (process-group lifecycle), run, freePort
     src/chromium.js        #   findChromium

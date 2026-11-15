@@ -8,6 +8,7 @@ How the repos relate is mapped in [docs/ECOSYSTEM.md](docs/ECOSYSTEM.md).
 | --- | --- |
 | [`@huyab/config`](#huyabconfig) | Shared `biome.json` and `tsconfig.base.json` |
 | [`@huyab/sso`](#huyabsso) | Verify the `huyab_sso` cookie / Bearer JWT from auth.huyab.cfd; Hono `requireUser()` |
+| [`@huyab/cron`](#huyabcron) | Cron hub protocol: the hub sends a tick every minute, each spoke runs the jobs that are due and ignores the rest |
 | [`@huyab/e2e`](#huyabe2e) | Local E2E plumbing: dev-server lifecycle, Chromium lookup, fetch harness, local-only guard, fake SSO issuer |
 
 Install any package with its path inside this repo (quote it: `&` is special in
@@ -149,6 +150,49 @@ finish();
 | `BASE`, `test`, `assert`, `request`, `expectStatus`, `finish` | Fetch harness; `BASE` is `E2E_BASE_URL` (default `http://127.0.0.1:8787`). |
 | `assertLocalOnly(baseUrl = BASE)` | Throws unless the host is `127.0.0.1` or `localhost`. |
 | `startSsoMock()` | Fake issuer on a free port: `{ issuer, mintToken(email, name?), close() }`. |
+
+## `@huyab/cron`
+
+One hub Worker has the only cron trigger (`* * * * *`). Every spoke Worker keeps its
+own schedule next to its code and gets a tick through a service binding.
+
+```sh
+pnpm add "github:nguyenhuy158/kit#v0.3.0&path:packages/cron"
+```
+
+Spoke (`wrangler.jsonc` has no `triggers`; secret `HUB_KEY` is the same on the hub):
+
+```ts
+import { handleTick, TICK_PATH, type TickJob } from "@huyab/cron";
+
+const jobs: TickJob<Env>[] = [
+  { name: "scan", schedule: "*/15 * * * *", run: async (env) => { /* ... */ } },
+];
+
+// in fetch(): route the tick, everything else is your app
+if (url.pathname === TICK_PATH) {
+  return handleTick(request, env, { jobs, key: env.HUB_KEY, dedupe: env.CRON_KV });
+}
+```
+
+Hub (`scheduled` handler, one service binding per spoke):
+
+```ts
+import { dispatchTick } from "@huyab/cron";
+
+await dispatchTick(
+  [{ name: "badminton", fetcher: env.BADMINTON }],
+  { key: env.HUB_KEY, scheduledTime: event.scheduledTime },
+);
+```
+
+| Export | What it does |
+| --- | --- |
+| `handleTick(request, env, { jobs, key, timeZone?, dedupe? })` | `POST /__cron/tick` only. `401` on a wrong bearer, `400` on a bad body. Runs jobs whose schedule matches the tick minute, reports `{ ran, skipped, failed }`, answers `500` if a job threw. `dedupe` is a KV-like store that stops the same job running twice in one minute. |
+| `dispatchTick(spokes, { key, scheduledTime, timeoutMs? })` | Sends the tick to every spoke in parallel and returns one `{ spoke, ok, status, ran, error }` each. A slow or dead spoke never blocks the others. |
+| `isDue(expression, date, timeZone?)` | Standard 5-field cron (`*`, lists, ranges, steps). Default zone `Asia/Ho_Chi_Minh`. Day of month and day of week are OR-ed when both are set. |
+
+Jobs must be safe to run twice. Free plan: a hub can tick about 49 spokes per run (50 subrequests).
 
 ## Reusable CI
 
