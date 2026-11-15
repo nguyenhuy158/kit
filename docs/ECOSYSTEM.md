@@ -5,6 +5,9 @@ contracts they share, and where `kit` fits. Every relationship cites the file th
 proves it (paths are relative to `personal-projects/`). Snapshot taken 2026-10-03; when
 a cited file changes, update this map in the same change.
 
+For a quick picture, see [ECOSYSTEM-MAP.md](ECOSYSTEM-MAP.md): the diagram and the
+endpoint table on one page. Update it together with this file.
+
 ## 1. Overview
 
 | Repo | Kind | Prod URL | Role |
