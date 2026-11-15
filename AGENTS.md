@@ -76,7 +76,11 @@ packages, tag `vX.Y.Z` on `main`, push the tag, then bump consumers.
 
 ## Agent-Specific Instructions
 
-Keep responses short and focused. Never commit secrets. UI primitives and design
+Keep responses short and focused. Never commit secrets. Every machine runs
+huyabhome `scripts/install-tools.sh`, which installs gitleaks and a global
+pre-commit hook that scans staged changes. Do not bypass it: no
+`git commit --no-verify`, no change to `core.hooksPath`. CI runs gitleaks on
+every push and PR, so a leak that slips through blocks the merge. UI primitives and design
 tokens belong in `ui-kit`, not here and not hand-rolled in apps (see
 `docs/ECOSYSTEM.md` section 4.3). Before changing an
 export, check its consumers listed in `docs/ECOSYSTEM.md`.
