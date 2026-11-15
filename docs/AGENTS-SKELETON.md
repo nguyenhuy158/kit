@@ -22,6 +22,17 @@ pre-commit hook, no `--no-verify`, CI gitleaks job).
 
 Add new repo-specific sections at step 8, never after `Agent-Specific Instructions`.
 
+## One-screen rule
+
+Applies to every app with a UI and to `ui-kit`. Add this sentence to the repo's
+`Agent-Specific Instructions`:
+
+> Design every screen to fit one viewport with no scrolling: use ui-kit `Screen`
+> and `PagedList`, and check it in e2e with `assertFitsViewport` from
+> `@huyab/e2e`. Exceptions: reading-only pages and form Sheets/Modals.
+
+Details: `ECOSYSTEM.md` section 4.5.
+
 ## Delivery rule
 
 Applies to `kit`, `ui-kit` and every app that uses them.
