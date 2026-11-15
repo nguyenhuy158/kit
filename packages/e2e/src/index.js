@@ -3,6 +3,7 @@ export {
   assert,
   assertLocalOnly,
   BASE,
+  expectDeployed,
   expectStatus,
   finish,
   request,

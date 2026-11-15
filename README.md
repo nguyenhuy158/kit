@@ -148,6 +148,7 @@ finish();
 | `freePort()` | A free TCP port on 127.0.0.1, as a string. |
 | `findChromium()` | `PLAYWRIGHT_CHROMIUM_PATH`, then Playwright browser folders, then system Chrome/Chromium, else `undefined`. |
 | `BASE`, `test`, `assert`, `request`, `expectStatus`, `finish` | Fetch harness; `BASE` is `E2E_BASE_URL` (default `http://127.0.0.1:8787`). |
+| `expectDeployed(baseUrl = BASE)` | The deploy check every app must pass: `GET /api/version` is 200 with a non-empty `commit`, `GET /api/health` is 200 with `ok: true`. Returns `{ commit }`. GET only, safe against production. |
 | `assertLocalOnly(baseUrl = BASE)` | Throws unless the host is `127.0.0.1` or `localhost`. |
 | `startSsoMock()` | Fake issuer on a free port: `{ issuer, mintToken(email, name?), close() }`. |
 
