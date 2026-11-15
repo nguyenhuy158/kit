@@ -23,7 +23,7 @@ a cited file changes, update this map in the same change.
 | `cardstat` | web (Next.js on OpenNext worker) | https://cardstats.huyab.cfd | Card spending stats (`cardstat/wrangler.jsonc`) |
 | `hooks` | worker (SSR HTML) | https://hooks.huyab.cfd | Webhook tester / inspector (`hooks/AGENTS.md:5-6`) |
 | `games` | web (worker + static) | https://games.huyab.cfd (+ `pikachu.huyab.cfd` 301) | Multiplayer browser games on Durable Objects (`games/AGENTS.md:5-10`, `games/wrangler.toml`) |
-| `mytools` | web (React Router SSR worker) | https://huyab.cfd, https://case.huyab.cfd | ToolHub; `/projects` showcase pings every app (`mytools/AGENTS.md:5-9`) |
+| `huyabhome` | web (React Router SSR worker) | https://huyab.cfd, https://case.huyab.cfd | ToolHub; `/projects` showcase pings every app (`huyabhome/AGENTS.md:5-9`) |
 | `badminton` | worker | https://badminton.huyab.cfd | Tracker for two badminton groups: fund, sessions, SSO gate (`badminton/wrangler.jsonc`) |
 | `digest-vote` | worker | https://digest.huyab.cfd | Vote feedback on the morning digest, KV `VOTES` (`digest-vote/wrangler.jsonc`) |
 | `runlater` | worker (no route) | — | GitHub webhook job queue with a pull runner, own D1 `runlater` (`runlater/wrangler.jsonc`) |
@@ -35,9 +35,9 @@ a cited file changes, update this map in the same change.
 | `slack-plane-intake` | container (pipi) | https://intake.huyab.cfd | Slack requests from the BA turned into Plane tasks after a confirm on its UI; copies `ui-kit` tokens, notices go to Telegram via Hermes (`skills/plugins/workflow/skills/slack-plane-intake/SKILL.md`) |
 | `kit` | lib (pnpm workspace) | github:nguyenhuy158/kit | Shared code via git deps: `@huyab/config`, `@huyab/sso`, `@huyab/e2e`, reusable `check.yml` (this repo) |
 
-Worker names differ from repo names in four places: `chia-keo` → `chiakeo`
+Worker names differ from repo names in three places: `chia-keo` → `chiakeo`
 (`chia-keo/wrangler.toml:1`), `hooks` → `webhook-tester` (`hooks/wrangler.jsonc`),
-`mytools` → `case-converter` (`mytools/wrangler.jsonc`), `games` → `pikachu-online`
+and `games` → `pikachu-online`
 (`games/wrangler.toml:1`). Service bindings reference the **worker** name.
 
 ## 2. Graph
@@ -61,7 +61,7 @@ graph LR
     CARD["cardstat<br/>cardstats.huyab.cfd"]
     HOOKS["hooks<br/>hooks.huyab.cfd"]
     GAMES["games<br/>games.huyab.cfd"]
-    TOOLS["mytools<br/>huyab.cfd"]
+    TOOLS["huyabhome<br/>huyab.cfd"]
     CV["resume<br/>cv.huyab.cfd"]
   end
 
@@ -115,10 +115,10 @@ Edge sources:
 | monitor-ios → monitor | `monitor-ios/Monitor/API.swift:96`, `monitor-ios/Monitor/API.swift:133-135` |
 | iOS WebView login → sso | `chia-keo-ios/ChiaKeo/LoginView.swift:4`, `notes-ios/Notes/LoginView.swift:4`, `monitor-ios/Monitor/LoginView.swift:4-6` |
 | ai-english-expo → ai-english | `ai-english-expo/src/api.js:9`, `ai-english-expo/src/api.js:65`, `ai-english-expo/src/LoginScreen.js:18` |
-| mytools pings every app | `mytools/app/routes/api.projects-status.tsx:1-8`, `mytools/app/data/projects.ts:1-7` (URLs live in D1 table `projects`) |
-| shared D1 `db` (`6eb9cfce-…`) | `database_id` in `sso/`, `mailer/`, `monitor/`, `hooks/`, `notes/`, `share/`, `cardstat/`, `mytools/wrangler.jsonc` |
-| ui-kit tokens copied | header comments in `ai-english/src/client/tokens.css:2`, `chia-keo/src/styles/tokens.css:2-3`, `notes/src/styles/tokens.css:19`, `monitor/client/src/styles/tokens.css:2`, `share/src/styles/tokens.css:2`, `cardstat/src/styles/tokens.css:17`, `mytools/app/styles/tokens.css:2-3` |
-| kit planned / adopted | see section 5 for which file each package replaces; adopted so far (branch `chore/standardize`, unmerged): sso and mytools (`sso/package.json`, `mytools/package.json`, `sso/.github/workflows/ci.yml:17`, `mytools/.github/workflows/ci.yml:17`) |
+| huyabhome pings every app | `huyabhome/app/routes/api.projects-status.tsx:1-8`, `huyabhome/app/data/projects.ts:1-7` (URLs live in D1 table `projects`) |
+| shared D1 `db` (`6eb9cfce-…`) | `database_id` in `sso/`, `mailer/`, `monitor/`, `hooks/`, `notes/`, `share/`, `cardstat/`, `huyabhome/wrangler.jsonc` |
+| ui-kit tokens copied | header comments in `ai-english/src/client/tokens.css:2`, `chia-keo/src/styles/tokens.css:2-3`, `notes/src/styles/tokens.css:19`, `monitor/client/src/styles/tokens.css:2`, `share/src/styles/tokens.css:2`, `cardstat/src/styles/tokens.css:17`, `huyabhome/app/styles/tokens.css:2-3` |
+| kit planned / adopted | see section 5 for which file each package replaces; adopted so far (branch `chore/standardize`, unmerged): sso and huyabhome (`sso/package.json`, `huyabhome/package.json`, `sso/.github/workflows/ci.yml:17`, `huyabhome/.github/workflows/ci.yml:17`) |
 
 ## 3. Per-repo
 
@@ -127,7 +127,7 @@ Cloudflare account resources referenced below:
 - **D1 `db`** (`6eb9cfce-f6f3-4476-8e46-7c8e954d93c1`): shared; every app prefixes its tables (`sso_`, `mailer_`, `monitor_`, `webhook_tester_`, `notes_`, `share_`, `cardstat_`). Sources: `sso/schema.sql:4`, `mailer/schema.sql:1`, `monitor/schema.sql:4`, `hooks/schema.sql:6`, `notes/schema.sql:3`, `share/schema.sql:4`, `cardstat/migrations/0001_init.sql:1`. Tables owned by a scheduled job on a VM (systemd timer or cron, not a Worker) are prefixed `cronjob_<job>_`, with the job name in snake_case, e.g. `cronjob_fnfl_release_watch_tags` (`homelab/infra-vm-setup` `setup.d/85-jobs.sh`). Exception: `cardstat/migrations/0002_auth.sql:3-52` created unprefixed `user`/`session`/`account`/`verification` tables in the shared DB.
 - **D1 `stitch-db`** (ai-english only), **D1 `chiakeo-db`** (chia-keo only), **D1 `runlater`** (runlater only).
 - **Migration history:** each app on `db` keeps its own `migrations_table` (`sso_migrations`, `mailer_migrations`, `monitor_migrations`, `webhook_tester_migrations`, `notes_migrations`, `share_migrations`, `cardstat_migrations`, `mytools_migrations`) and a `migrations/0000_baseline.sql` taken from production on 2026-10-18. The shared `d1_migrations` is legacy: it still holds cardstat's rows and three drizzle rows of an app that is not in `personal-projects/`.
-- **Legacy names kept on purpose:** cardstat's unprefixed `user` (its tables reference it, `cardstat/migrations/0005_drop_better_auth.sql`), mytools' unprefixed `projects`. Tables no repo here owns: `caro_*`, `shoperr_*` (shopee-tracker), `hono_auth_*`.
+- **Legacy names kept on purpose:** cardstat's unprefixed `user` (its tables reference it, `cardstat/migrations/0005_drop_better_auth.sql`), huyabhome' unprefixed `projects`. Tables no repo here owns: `caro_*`, `shoperr_*` (shopee-tracker), `hono_auth_*`.
 
 ### sso
 - **Depends on:** Google OAuth (`sso/src/google.ts`); D1 `db` table `sso_users` (`sso/schema.sql:4`).
@@ -219,13 +219,13 @@ Same SwiftUI template, zero dependencies, same `Auth.swift` / `API.swift` / `Log
 - **Data:** DO SQLite only (no D1: "goi free da het quota D1", `games/wrangler.toml`).
 - **Deploy:** Workers Builds (`games/AGENTS.md:74`); CI waits for `/api/version` then smokes prod (`games/.github/workflows/ci.yml:71-95`).
 
-### mytools
-- **Depends on:** D1 `db` (`projects` table) (`mytools/app/data/projects.ts:1-7`); KV `KV_GAMES`, `NOTES`; DOs `LotoGameRoom`, `OnlineCounter` (`mytools/wrangler.jsonc`); external Odoo JSON-RPC (`mytools/app/utils/odoo.ts:49`).
-- **Depended on by:** none. It pings every app listed in `projects` (`mytools/app/routes/api.projects-status.tsx`).
-- **Auth:** none (no SSO usage found in `mytools/app` or `mytools/workers`).
-- **kit:** `@huyab/config`, `@huyab/e2e` (`mytools/package.json`), reusable `check.yml` plus its own unit-test job for D1 secrets (`mytools/.github/workflows/ci.yml:17`).
+### huyabhome
+- **Depends on:** D1 `db` (`projects` table) (`huyabhome/app/data/projects.ts:1-7`); KV `KV_GAMES`, `NOTES`; DOs `LotoGameRoom`, `OnlineCounter` (`huyabhome/wrangler.jsonc`); external Odoo JSON-RPC (`huyabhome/app/utils/odoo.ts:49`).
+- **Depended on by:** none. It pings every app listed in `projects` (`huyabhome/app/routes/api.projects-status.tsx`).
+- **Auth:** none (no SSO usage found in `huyabhome/app` or `huyabhome/workers`).
+- **kit:** `@huyab/config`, `@huyab/e2e` (`huyabhome/package.json`), reusable `check.yml` plus its own unit-test job for D1 secrets (`huyabhome/.github/workflows/ci.yml:17`).
 - **Data:** D1 `db`, two KV namespaces, DO SQLite.
-- **Deploy:** Workers Builds on push to `main` (`mytools/AGENTS.md:121`).
+- **Deploy:** Workers Builds on push to `main` (`huyabhome/AGENTS.md:121`).
 
 ### resume
 - **Depends on:** nothing (static `public/index.html`, Tailwind CDN) (`resume/AGENTS.md:5-8`).
@@ -235,13 +235,13 @@ Same SwiftUI template, zero dependencies, same `Auth.swift` / `API.swift` / `Log
 - **Depends on:** nothing (no backend, `xo-expo/AGENTS.md:5-8`). **Deploy:** EAS Update (`xo-expo/app.json:36-37`).
 
 ### ui-kit
-- **Depends on:** nothing at runtime. **Depended on by:** copies in ai-english, chia-keo, notes, monitor, share, cardstat, mytools (section 2). **Deploy:** gallery only, Worker `ui-kit` at https://uikit.huyab.cfd (`ui-kit/wrangler.jsonc`).
+- **Depends on:** nothing at runtime. **Depended on by:** copies in ai-english, chia-keo, notes, monitor, share, cardstat, huyabhome (section 2). **Deploy:** gallery only, Worker `ui-kit` at https://uikit.huyab.cfd (`ui-kit/wrangler.jsonc`).
 
 ### dev-notes
 - Docs only (`dev-notes/AGENTS.md:5-8`). Conventions in `dev-notes/conventions.md`.
 
 ### kit
-- **Depends on:** nothing. **Depended on by:** sso and mytools (adopted on `chore/standardize`), planned for every other TS/JS repo (section 5). **Deploy:** git tags (`v0.1.0`), consumed as `pnpm add "github:nguyenhuy158/kit#v0.1.0&path:packages/<name>"`.
+- **Depends on:** nothing. **Depended on by:** sso and huyabhome (adopted on `chore/standardize`), planned for every other TS/JS repo (section 5). **Deploy:** git tags (`v0.1.0`), consumed as `pnpm add "github:nguyenhuy158/kit#v0.1.0&path:packages/<name>"`.
 
 ## 4. Shared contracts
 
@@ -321,7 +321,7 @@ Sources: `mailer/src/index.ts:180-195` (body type and validator), `mailer/src/in
   semantic classes (`bg-primary`, `text-fg-muted`, `rounded-ui`) (`ui-kit/README.md:59-72`,
   `chia-keo/AGENTS.md:136-140`).
 - Copies: verbatim in ai-english (`ai-english/AGENTS.md:123`), monitor (`monitor/AGENTS.md:19`),
-  share (`share/AGENTS.md:14`); re-valued in chia-keo, notes, cardstat, mytools (header
+  share (`share/AGENTS.md:14`); re-valued in chia-keo, notes, cardstat, huyabhome (header
   comments cited in section 2). notes also generates `--ui-primary` at runtime
   (`notes/src/accentColor.ts:40-46`).
 
@@ -333,7 +333,7 @@ Tokens stay copy-paste for now (ui-kit is intentionally not a package,
 - Every deployed repo has `pnpm e2e` (local `wrangler dev`) and `pnpm e2e:prod`; the prod
   suite is GET-only, logged out, never writes (`sso/AGENTS.md:81-84`, `mailer/AGENTS.md:69-70`,
   `hooks/AGENTS.md:96-98`, `chia-keo/AGENTS.md:175`, `notes/AGENTS.md:58`,
-  `share/AGENTS.md:56`, `monitor/AGENTS.md:84-85`, `mytools/AGENTS.md:103-106`,
+  `share/AGENTS.md:56`, `monitor/AGENTS.md:84-85`, `huyabhome/AGENTS.md:103-106`,
   `cardstat/AGENTS.md:105`, `resume/AGENTS.md:58-59`, `games/AGENTS.md:107`).
 - Write suites hard-fail on an `https://` base URL: `mailer/e2e/dev-smoke.mjs:6`,
   `hooks/e2e/dev-smoke.mjs:6`. `@huyab/e2e` exports this as `assertLocalOnly(baseUrl)`.
@@ -346,8 +346,8 @@ Tokens stay copy-paste for now (ui-kit is intentionally not a package,
 | Package | Replaces (copies today) |
 | --- | --- |
 | `@huyab/sso` | the former `sso/scaffold/cloudflare-worker/sso-verifier.js` + `session.js` (deleted on sso `chore/standardize`) and its copies: `notes/worker/src/sso-verifier.js`, `share/worker/src/sso-verifier.ts`, `cardstat/src/infrastructure/auth/sso-verifier.ts`, `hooks/src/adapters/outbound/security/sso-verifier.ts`, `mailer/src/sso.ts`, `chia-keo/worker/src/sso.ts`, `games/worker/sso.js`; `jose`-based variants in `monitor/server/src/index.ts:19-41`, `ai-english/src/adapters/jose/ssoVerifier.js` |
-| `@huyab/e2e` | `e2e/chromium.mjs` (ai-english, cardstat, chia-keo, monitor, notes, games, share, ui-kit; already removed from mytools and sso), `e2e/harness.mjs` (hooks, mailer, resume), server start/stop in each `e2e/run.mjs` |
-| `@huyab/config` | per-repo `biome.json` (ai-english, ai-english-expo, chia-keo, hooks, mailer, monitor, mytools, notes, games, share, sso, ui-kit, xo-expo) and `tsconfig.json` strict settings |
+| `@huyab/e2e` | `e2e/chromium.mjs` (ai-english, cardstat, chia-keo, monitor, notes, games, share, ui-kit; already removed from huyabhome and sso), `e2e/harness.mjs` (hooks, mailer, resume), server start/stop in each `e2e/run.mjs` |
+| `@huyab/config` | per-repo `biome.json` (ai-english, ai-english-expo, chia-keo, hooks, mailer, monitor, huyabhome, notes, games, share, sso, ui-kit, xo-expo) and `tsconfig.json` strict settings |
 | `kit/.github/workflows/check.yml` | per-repo `.github/workflows/ci.yml` lint/check/build/e2e jobs |
 
 ## 6. How to add a new app
@@ -394,6 +394,6 @@ Tokens stay copy-paste for now (ui-kit is intentionally not a package,
 9. **Native client (optional).** iOS: copy the `*-ios` template (`Auth.swift`, `API.swift`,
    `LoginView.swift`, `make-ipa.sh`) and set `ApiClient.origin` + `appHost`. Expo: copy
    `ai-english-expo/src/api.js` + `LoginScreen.js` pattern.
-10. **Register.** Insert a row in the shared D1 `projects` table so mytools lists and pings it
-    (`mytools/app/data/projects.ts:1-7`), add `AGENTS.md`, and add the app to this file
+10. **Register.** Insert a row in the shared D1 `projects` table so huyabhome lists and pings it
+    (`huyabhome/app/data/projects.ts:1-7`), add `AGENTS.md`, and add the app to this file
     (overview row, graph node, per-repo section).
