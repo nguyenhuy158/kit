@@ -17,6 +17,9 @@ example, a lib with no deploy has no `Deploy & CI`).
 | 8 | Repo-specific sections | For example `## Architecture Decisions & Pitfalls` |
 | 9 | `## Agent-Specific Instructions` | Always last |
 
+Every `Agent-Specific Instructions` must keep the secret-scan rule (gitleaks
+pre-commit hook, no `--no-verify`, CI gitleaks job).
+
 Add new repo-specific sections at step 8, never after `Agent-Specific Instructions`.
 
 ## Delivery rule
