@@ -360,8 +360,10 @@ with `git rev-parse HEAD`; a 200 alone only proves some version is serving.
 `@huyab/e2e` has `expectDeployed(baseUrl)` for the smoke suites. Exempt: native
 clients (no server), static pages with no Worker code, and `docs`-only repos.
 
-Today: chia-keo, notes, monitor, games, ai-english and badminton have the routes. sso,
-mailer, share, hooks, huyabhome, cardstat, digest-vote, runlater and resume do not yet.
+Today: chia-keo, notes, monitor, games, ai-english and badminton have the routes. Open
+PRs add them to sso, mailer, share, hooks, huyabhome, digest-vote and runlater.
+Exempt: resume (static assets only, no Worker code), cardstat (archived), and native
+clients.
 
 ### 4.5 Cron hub and spokes
 
