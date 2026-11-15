@@ -8,3 +8,38 @@ coverage/
 .idea/
 .vscode/
 brand/out/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+
+# Cloudflare local dev
+.wrangler/
+
+# E2E failure screenshot
+e2e-failure.png
+
+# More build and test output
+.eslintcache
+.turbo/
+.vite/
+.cache/
+playwright-report/
+test-results/
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS and editor files
+Thumbs.db
+*.swp
+*~
+
+# Claude Code local files
+.claude/settings.local.json
+CLAUDE.local.md
