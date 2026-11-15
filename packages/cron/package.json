@@ -1,0 +1,13 @@
+{
+  "name": "@huyab/cron",
+  "version": "0.1.0",
+  "description": "Cron hub protocol: the hub sends a tick every minute, each spoke runs the jobs that are due and ignores the rest",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src",
+    "!src/**/*.test.ts"
+  ]
+}

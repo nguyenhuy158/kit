@@ -60,6 +60,31 @@ export function expectStatus(response, status) {
   );
 }
 
+/**
+ * Deploy check every app must pass: `GET /api/version` answers 200 with a
+ * non-empty `commit`, and `GET /api/health` answers 200 with `ok: true`.
+ * GET only, so it is safe against production.
+ *
+ * @param {string} [baseUrl]
+ * @returns {Promise<{ commit: string }>}
+ */
+export async function expectDeployed(baseUrl = BASE) {
+  const versionResponse = await fetch(`${baseUrl}/api/version`);
+  expectStatus(versionResponse, 200);
+  const version = /** @type {{ commit?: unknown }} */ (
+    await versionResponse.json()
+  );
+  assert(
+    typeof version.commit === "string" && version.commit.length > 0,
+    `${baseUrl}/api/version has no commit`,
+  );
+  const healthResponse = await fetch(`${baseUrl}/api/health`);
+  expectStatus(healthResponse, 200);
+  const health = /** @type {{ ok?: unknown }} */ (await healthResponse.json());
+  assert(health.ok === true, `${baseUrl}/api/health is not ok`);
+  return { commit: version.commit };
+}
+
 /** Prints the tally and exits non-zero when any check failed. */
 export function finish() {
   console.log(`\n${passed} passed, ${failed} failed`);

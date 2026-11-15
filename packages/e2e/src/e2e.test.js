@@ -1,5 +1,6 @@
+import { createServer } from "node:http";
 import { describe, expect, it } from "vitest";
-import { assertLocalOnly } from "./harness.js";
+import { assertLocalOnly, expectDeployed } from "./harness.js";
 import { freePort, startServer } from "./server.js";
 
 describe("assertLocalOnly", () => {
@@ -47,5 +48,78 @@ describe("startServer", () => {
     });
 
     await expect(start).rejects.toThrow(/exited early \(3\)/);
+  });
+});
+
+describe("expectDeployed", () => {
+  /** @param {Record<string, { status: number; body: unknown }>} routes */
+  async function serve(routes) {
+    const server = createServer((request, response) => {
+      const route = routes[request.url ?? ""];
+      if (!route) {
+        response.statusCode = 404;
+        response.end("{}");
+        return;
+      }
+      response.statusCode = route.status;
+      response.setHeader("content-type", "application/json");
+      response.end(JSON.stringify(route.body));
+    });
+    await new Promise((resolve) =>
+      server.listen(0, "127.0.0.1", () => resolve(undefined)),
+    );
+    const { port } = /** @type {import("node:net").AddressInfo} */ (
+      server.address()
+    );
+    return { url: `http://127.0.0.1:${port}`, close: () => server.close() };
+  }
+
+  it("returns the deployed commit when version and health are fine", async () => {
+    const app = await serve({
+      "/api/version": { status: 200, body: { commit: "5495baa" } },
+      "/api/health": { status: 200, body: { ok: true } },
+    });
+    try {
+      await expect(expectDeployed(app.url)).resolves.toEqual({
+        commit: "5495baa",
+      });
+    } finally {
+      app.close();
+    }
+  });
+
+  it("fails when the commit is missing", async () => {
+    const app = await serve({
+      "/api/version": { status: 200, body: { commit: "" } },
+      "/api/health": { status: 200, body: { ok: true } },
+    });
+    try {
+      await expect(expectDeployed(app.url)).rejects.toThrow(/no commit/);
+    } finally {
+      app.close();
+    }
+  });
+
+  it("fails when health is not ok", async () => {
+    const app = await serve({
+      "/api/version": { status: 200, body: { commit: "5495baa" } },
+      "/api/health": { status: 500, body: { ok: false } },
+    });
+    try {
+      await expect(expectDeployed(app.url)).rejects.toThrow(/api\/health/);
+    } finally {
+      app.close();
+    }
+  });
+
+  it("fails when an endpoint is missing", async () => {
+    const app = await serve({});
+    try {
+      await expect(expectDeployed(app.url)).rejects.toThrow(
+        /expected 200, got 404/,
+      );
+    } finally {
+      app.close();
+    }
   });
 });

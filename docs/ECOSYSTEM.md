@@ -344,11 +344,43 @@ Tokens stay copy-paste for now (ui-kit is intentionally not a package,
   sso (`sso/AGENTS.md:76-80`, `notes/e2e/sso-mock.mjs`, `share/e2e/sso-mock.mjs`,
   `cardstat/.github/workflows/ci.yml:112`).
 
+### 4.6 Deploy check: `/api/version` and `/api/health`
+
+Every deployed app with a server (Worker) answers two public `GET` routes, so a deploy
+can be checked without guessing and `pnpm e2e:prod` can run them against production:
+
+| Route | Answer |
+| --- | --- |
+| `GET /api/version` | `200` JSON with the build baked in at build time: `commit` (full SHA, never empty), `shortCommit`, `branch`, `builtAt`. A `scripts/build-info.mjs` writes it before every `check`, `build`, `test`. It is never read from the request. Reference: `chia-keo/scripts/build-info.mjs`. |
+| `GET /api/health` | `200 { "ok": true }` when the app and its dependencies (D1, KV) work. On failure `500 { "ok": false, "hint": "..." }`. No secrets and no user data in either answer. |
+
+Both stay outside the SSO gate (`Keep webhooks/health public`, section 6 step 3), for
+example registered before the auth middleware. Check a deploy by comparing `commit`
+with `git rev-parse HEAD`; a 200 alone only proves some version is serving.
+`@huyab/e2e` has `expectDeployed(baseUrl)` for the smoke suites. Exempt: native
+clients (no server), static pages with no Worker code, and `docs`-only repos.
+
+Today: chia-keo, notes, monitor, games and ai-english have the routes. sso, mailer,
+share, hooks, huyabhome, cardstat, badminton, digest-vote, runlater and resume do not
+yet.
+
+### 4.5 Cron hub and spokes
+
+Planned, not deployed yet. One hub Worker owns the only cron trigger (`* * * * *`).
+It sends `POST /__cron/tick` with `Authorization: Bearer HUB_KEY` and
+`{ "scheduledTime": <ms> }` to every spoke through a service binding. A spoke keeps its
+schedule in its own code, runs the jobs that are due at that minute and ignores the
+rest. Implemented by `@huyab/cron` (`handleTick` on the spoke, `dispatchTick` on the
+hub). A job must be safe to run twice (the cron can fire twice; `dedupe` helps).
+The tick route is reachable only by the hub: the bearer is checked, and the spoke has
+no public route for it.
+
 ## 5. kit packages: what they replace
 
 | Package | Replaces (copies today) |
 | --- | --- |
 | `@huyab/sso` | the former `sso/scaffold/cloudflare-worker/sso-verifier.js` + `session.js` (deleted on sso `chore/standardize`) and its copies: `notes/worker/src/sso-verifier.js`, `share/worker/src/sso-verifier.ts`, `cardstat/src/infrastructure/auth/sso-verifier.ts`, `hooks/src/adapters/outbound/security/sso-verifier.ts`, `mailer/src/sso.ts`, `chia-keo/worker/src/sso.ts`, `games/worker/sso.js`; `jose`-based variants in `monitor/server/src/index.ts:19-41`, `ai-english/src/adapters/jose/ssoVerifier.js` |
+| `@huyab/cron` | nothing yet. New package for the cron hub and its spokes (section 4.5) |
 | `@huyab/e2e` | `e2e/chromium.mjs` (ai-english, cardstat, chia-keo, monitor, notes, games, share, ui-kit; already removed from huyabhome and sso), `e2e/harness.mjs` (hooks, mailer, resume), server start/stop in each `e2e/run.mjs` |
 | `@huyab/config` | per-repo `biome.json` (ai-english, ai-english-expo, chia-keo, hooks, mailer, monitor, huyabhome, notes, games, share, sso, ui-kit, xo-expo) and `tsconfig.json` strict settings |
 | `kit/.github/workflows/check.yml` | per-repo `.github/workflows/ci.yml` lint/check/build/e2e jobs |
@@ -382,21 +414,22 @@ Tokens stay copy-paste for now (ui-kit is intentionally not a package,
      `rclone sync --checksum --fast-list`; comparing modtimes costs one HEAD per file.
    - **Free plan limits:** D1 500 MB per database, 5 GB per account; R2 10 GB, 1M Class A,
      10M Class B operations per month; Workers 100k requests per day.
-5. **Email.** Never hold `RESEND_API_KEY`. Add `"services": [{ "binding": "MAILER", "service": "mailer" }]`,
+5. **Deploy check.** Add `GET /api/version` and `GET /api/health` per 4.6 and call `expectDeployed` in `e2e/readonly-smoke.mjs`.
+6. **Email.** Never hold `RESEND_API_KEY`. Add `"services": [{ "binding": "MAILER", "service": "mailer" }]`,
    `wrangler secret put MAILER_KEY` (= mailer's `INTERNAL_API_KEY`), call `POST /send` per 4.2.
-6. **UI.** Copy `ui-kit/src/styles/tokens.css` + needed components; change token values,
+7. **UI.** Copy `ui-kit/src/styles/tokens.css` + needed components; change token values,
    never names (4.3).
-7. **E2E.** Add `e2e/run.mjs` using `@huyab/e2e` (`run`, `startServer`, `freePort`, `findChromium`,
+8. **E2E.** Add `e2e/run.mjs` using `@huyab/e2e` (`run`, `startServer`, `freePort`, `findChromium`,
    `startSsoMock`, harness `BASE`/`test`/`assert`/`request`/`expectStatus`/`finish`);
    `readonly-smoke.mjs` GET-only for `pnpm e2e:prod`; any writing suite calls
    `assertLocalOnly(baseUrl)` first (4.4).
-8. **CI.** `.github/workflows/ci.yml` calls
+9. **CI.** `.github/workflows/ci.yml` calls
    `nguyenhuy158/kit/.github/workflows/check.yml@v0.1.0` with `run-test` / `run-build` /
    `run-e2e`. Deploy stays in Cloudflare Workers Builds (connect the repo in the dashboard);
    CI never runs `wrangler deploy` (`cardstat/.github/workflows/ci.yml:8-17`).
-9. **Native client (optional).** iOS: copy the `*-ios` template (`Auth.swift`, `API.swift`,
+10. **Native client (optional).** iOS: copy the `*-ios` template (`Auth.swift`, `API.swift`,
    `LoginView.swift`, `make-ipa.sh`) and set `ApiClient.origin` + `appHost`. Expo: copy
    `ai-english-expo/src/api.js` + `LoginScreen.js` pattern.
-10. **Register.** Insert a row in the shared D1 `projects` table so huyabhome lists and pings it
+11. **Register.** Insert a row in the shared D1 `projects` table so huyabhome lists and pings it
     (`huyabhome/app/data/projects.ts:1-7`), add `AGENTS.md`, and add the app to this file
     (overview row, graph node, per-repo section).
