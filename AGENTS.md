@@ -96,3 +96,4 @@ tokens belong in `ui-kit`, not here and not hand-rolled in apps (see
 `docs/ECOSYSTEM.md` section 4.3). Every screen fits one viewport with no
 scrolling (`docs/ECOSYSTEM.md` section 4.5). Before changing an
 export, check its consumers listed in `docs/ECOSYSTEM.md`.
+Every repo keeps a full `.gitignore` and `.dockerignore` (rule: `kit/docs/AGENTS-SKELETON.md`, "Ignore files rule").

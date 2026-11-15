@@ -47,3 +47,21 @@ Applies to `kit`, `ui-kit` and every app that uses them.
   publish.
 - Local runs are for checking. Confirm a deploy with the live version endpoint
   (for example `/api/version`).
+
+## Ignore files rule
+
+Applies to every repo.
+
+- Every repo has a `.gitignore` and a `.dockerignore`, even a repo with no Dockerfile
+  (a Worker build or a later container then starts clean).
+- Both cover: dependencies (`node_modules/`, `.pnpm-store/`), build and test output
+  (`dist/`, `build/`, `coverage/`, `playwright-report/`, `test-results/`, `.vite/`,
+  `.turbo/`, `.cache/`, `*.tsbuildinfo`, `e2e-failure.png`), env files (`.env`,
+  `.env.*`, `.dev.vars`, `.dev.vars.*`) with the `*.example` files kept, `.wrangler/`,
+  logs, OS and editor files, and Claude local files (`.claude/settings.local.json`,
+  `CLAUDE.local.md`).
+- `.dockerignore` also skips `.git`, `.github` and the Docker files themselves.
+- Add only the missing lines to an existing file. A pattern must not match a tracked
+  file: check with `git ls-files -ci --exclude-standard` (it prints nothing).
+- If a file that is ignored is already tracked, remove it from git with
+  `git rm --cached`, in its own pull request.
