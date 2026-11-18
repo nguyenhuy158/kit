@@ -91,7 +91,8 @@ pre-commit hook that scans staged changes. Do not bypass it: no
 every push and PR, so a leak that slips through blocks the merge. Layout follows
 one grid: 4 columns on mobile, 12 columns from 48rem, defined in `ui-kit`
 (`Container`, `Grid`, `Col`, tokens `--ui-grid-*`); apps do not define their own.
-UI primitives and design
+No native `alert()`, `confirm()` or `prompt()` in any repo: use the ui-kit popups
+(`useConfirm`, `usePrompt`, Toast); `@huyab/config` lints it. UI primitives and design
 tokens belong in `ui-kit`, not here and not hand-rolled in apps (see
 `docs/ECOSYSTEM.md` section 4.3). Every screen fits one viewport with no
 scrolling (`docs/ECOSYSTEM.md` section 4.5). Before changing an
