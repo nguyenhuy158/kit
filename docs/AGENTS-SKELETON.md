@@ -42,12 +42,21 @@ the theme and look like a browser error. Use the ui-kit popups instead:
 notice. `@huyab/config` enforces it with Biome `style/noRestrictedGlobals`
 (the rule does not see `window.confirm`, so review for it).
 
+## Frontend checklist rule
+
+Applies to every app with a UI and to `ui-kit`. Check UI work against the
+[Front-End Checklist rules](https://frontendchecklist.io/rules) (accessibility,
+CSS, HTML, images, performance, security). Critical and High rules block a
+merge unless the PR says why a rule does not apply. A library skips the
+page-level groups it cannot own (SEO, privacy, hosting headers).
+
 ## Delivery rule
 
 Applies to `kit`, `ui-kit` and every app that uses them.
 
 - Every repo runs CI on each pull request and on `main`: install, `pnpm lint`,
-  `pnpm check`, and tests, build and e2e where the repo has them. Use the
+  `pnpm check`, `pnpm audit --prod`, a gitleaks scan, and tests, build and e2e
+  where the repo has them. Use the
   reusable `kit/.github/workflows/check.yml`.
 - Every repo that ships (apps, the `ui-kit` gallery) is deployed by Cloudflare
   Workers Builds from `main`. Never run `wrangler deploy` or `pnpm deploy` from a

@@ -173,8 +173,10 @@ jobs:
       run-e2e: true    # pnpm e2e, Chromium installed when playwright-core is a dependency
 ```
 
-Always runs `pnpm install --frozen-lockfile` and `pnpm check` on the Node
-version in the caller's `.nvmrc`. Every boolean input defaults to `false`.
+Always runs `pnpm install --frozen-lockfile`, `pnpm lint` (when the script
+exists), `pnpm check` and `pnpm audit --prod --audit-level high` on the Node
+version in the caller's `.nvmrc`, plus a gitleaks secret scan job. Every
+boolean input defaults to `false`; `audit-level` changes the audit threshold.
 
 `runs-on` takes the runner as JSON and defaults to `"ubuntu-latest"`. A private
 repo with no Actions minutes passes its `RUNS_ON` variable, keeping fork PRs on
