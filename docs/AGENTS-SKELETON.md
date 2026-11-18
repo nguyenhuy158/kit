@@ -33,6 +33,15 @@ Applies to every app with a UI and to `ui-kit`. Add this sentence to the repo's
 
 Details: `ECOSYSTEM.md` section 4.5.
 
+## No native dialogs rule
+
+Applies to every app with a UI and to `ui-kit`. Never call the browser's
+`alert()`, `confirm()` or `prompt()` (also not as `window.confirm`): they ignore
+the theme and look like a browser error. Use the ui-kit popups instead:
+`useConfirm()` for yes/no, `usePrompt()` for a text answer, and a Toast for a
+notice. `@huyab/config` enforces it with Biome `style/noRestrictedGlobals`
+(the rule does not see `window.confirm`, so review for it).
+
 ## Delivery rule
 
 Applies to `kit`, `ui-kit` and every app that uses them.

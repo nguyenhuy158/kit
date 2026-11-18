@@ -16,7 +16,19 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "preset": "recommended"
+      "preset": "recommended",
+      "style": {
+        "noRestrictedGlobals": {
+          "level": "error",
+          "options": {
+            "deniedGlobals": {
+              "alert": "Native dialogs ignore the theme. Use a ui-kit Toast or dialog instead.",
+              "confirm": "Use useConfirm() from ui-kit instead of the native confirm().",
+              "prompt": "Use usePrompt() from ui-kit instead of the native prompt()."
+            }
+          }
+        }
+      }
     }
   },
   "javascript": {

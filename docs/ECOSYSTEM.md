@@ -312,6 +312,9 @@ Sources: `mailer/src/index.ts:180-195` (body type and validator), `mailer/src/in
   Gallery demo), then copy it. Do not hand-roll or fork a primitive inside an app
   (`ui-kit/AGENTS.md`, Agent-Specific Instructions).
 - See the live gallery: https://uikit.huyab.cfd.
+- **No native dialogs.** Do not use `alert()`, `confirm()` or `prompt()`. Use ui-kit
+  `useConfirm()` / `usePrompt()` (inside `ConfirmProvider`) and Toast. The shared
+  Biome config rejects the bare globals (`AGENTS-SKELETON.md`, No native dialogs rule).
 
 - Source of truth: `ui-kit/src/styles/tokens.css` (`ui-kit/AGENTS.md:12`).
 - Fixed names: `--ui-bg`, `--ui-surface`, `--ui-surface-muted`, `--ui-fg`, `--ui-fg-muted`,
