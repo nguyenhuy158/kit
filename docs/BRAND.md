@@ -2,6 +2,7 @@
 
 Moi project ca nhan dung chung mot phong cach "mochi kawaii". Nguon duy nhat:
 `brand/generate.mjs`. Khong ve tay logo rieng cho tung app.
+Prompt cho Codex/Gemini/Claude: [BRAND-PROMPTS.md](BRAND-PROMPTS.md).
 
 ## Quy tac
 
