@@ -174,7 +174,16 @@ jobs:
 ```
 
 Always runs `pnpm install --frozen-lockfile` and `pnpm check` on the Node
-version in the caller's `.nvmrc`. Every input defaults to `false`.
+version in the caller's `.nvmrc`. Every boolean input defaults to `false`.
+
+`runs-on` takes the runner as JSON and defaults to `"ubuntu-latest"`. A private
+repo with no Actions minutes passes its `RUNS_ON` variable, keeping fork PRs on
+GitHub runners:
+
+```yaml
+    with:
+      runs-on: ${{ (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && vars.RUNS_ON || '"ubuntu-latest"' }}
+```
 
 ## Releasing
 
