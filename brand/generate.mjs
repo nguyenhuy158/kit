@@ -26,6 +26,7 @@ export const APPS = {
   "ui-kit": { bg: "#e4c1f9", badge: "UI" },
   intake: { bg: "#dbe7a8", badge: "IN" },
   "tc-api-team": { bg: "#c7e8f3", badge: "TC" },
+  zalo: { bg: "#a2d2ff", badge: "Z" },
 };
 
 export function logoSvg({ bg, badge }) {
