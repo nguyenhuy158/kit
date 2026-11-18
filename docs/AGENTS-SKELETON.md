@@ -50,6 +50,16 @@ CSS, HTML, images, performance, security). Critical and High rules block a
 merge unless the PR says why a rule does not apply. A library skips the
 page-level groups it cannot own (SEO, privacy, hosting headers).
 
+## Mobile keyboard rule
+
+Applies to every app with a UI and to `ui-kit`. Every text field opens the
+keyboard that matches its data: `type="email"`, `"tel"`, `"url"` or
+`"search"`, and `inputMode="numeric"` (default text type, not
+`type="number"`) for money, quantities and codes. Add `autoComplete`
+(`email`, `tel`, `one-time-code`, `current-password`) so the phone can fill
+it. ui-kit `Input` adds `inputMode` and `autoComplete` from `type`; plain HTML
+fields set them by hand.
+
 ## Delivery rule
 
 Applies to `kit`, `ui-kit` and every app that uses them.
