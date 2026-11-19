@@ -49,6 +49,14 @@ App mới: thêm 1 dòng (màu nền pastel chưa dùng + màu nhấn + đồ v�
 
 Logo trong giao diện (header, trang login) dùng lại `icon-512.png`. Smoke của app kiểm tra `GET /favicon-32.png` = 200.
 
+Sinh bộ web: `uv run -q --with pillow python3 brand/make_icons.py <art.png> <out> --bg "#rrggbb"`.
+
+### Icon app desktop (Tauri, Dock macOS)
+
+Mọi app desktop cùng một cỡ trên Dock: tranh nằm trong ô bo góc 824×824 (bo 22.5%) giữa canvas 1024 trong suốt, có bóng nhẹ, giống icon hệ thống. Không dùng tranh tràn hết canvas: icon sẽ to hơn các app khác.
+
+Sinh: `uv run -q --with pillow python3 brand/make_icons.py <art.png hoặc icon-512.png> src-tauri/icons --desktop` → `32x32.png`, `128x128.png`, `128x128@2x.png`, `icon.png`, `icon.icns`, `app-icon-1024.png`. Icon iOS giữ tranh tràn khung (iOS tự bo góc), không dùng bộ này.
+
 ## v1 (cũ): mochi kawaii
 
 `brand/generate.mjs` sinh logo mochi bằng SVG. Chỉ còn để app chưa chuyển sang v2 tiếp tục chạy; không dùng cho app mới.
