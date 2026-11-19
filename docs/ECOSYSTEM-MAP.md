@@ -70,8 +70,9 @@ Repos with no edges to the diagrams above: `badminton` (SSO gate), `digest-vote`
 (KV `VOTES`), `runlater` (no route, GitHub webhook queue), `resume`, `xo-expo`,
 `dev-notes`.
 
-Own D1 databases, not in the shared `db`: `stitch-db` (ai-english), `chiakeo-db`
-(chia-keo), `runlater`.
+Own D1 databases, not in the shared `db`: `stitch-db` (ai-english), `runlater`.
+Turso: `pr-review-tasks` (PR dashboard Tasks). D1 quota is per account and per day,
+Turso per month: see [ECOSYSTEM.md §6](ECOSYSTEM.md#6-databases-d1-vs-turso).
 
 ## 3. Endpoints
 
