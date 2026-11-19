@@ -35,6 +35,7 @@ khác nhau ở **màu nền** và **món đồ trên đầu** capybara. Ảnh t�
 | ui-kit | `#e4c1f9` | `#9b4dca` | bảng màu vẽ |
 | intake | `#dbe7a8` | `#7a8f1f` | khay hộp thư |
 | tc-api-team | `#c7e8f3` | `#2b7fa0` | phích cắm điện |
+| review | `#f6d6f0` | `#b8327e` | kính lúp |
 | home (app desktop) | `#d9e4ec` | `#4a6fa5` | hộp đồ nghề |
 
 App mới: thêm 1 dòng (màu nền pastel chưa dùng + màu nhấn + đồ vật) bằng PR vào repo này.
