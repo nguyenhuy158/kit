@@ -3,6 +3,7 @@
 Code shared by the `*.huyab.cfd` apps. One pnpm workspace, consumed straight
 from GitHub as git dependencies pinned to a tag — no registry, no build step.
 How the repos relate is mapped in [docs/ECOSYSTEM.md](docs/ECOSYSTEM.md).
+What an app does to adopt kit, and which apps do: [docs/ADOPTION.md](docs/ADOPTION.md).
 
 | Package | What it is |
 | --- | --- |
