@@ -174,7 +174,8 @@ app.post("/api/tasks", async (c) => {
 
 `get()` loads once per `ttlMs`, shares one load between concurrent callers, serves
 the stale value while refreshing, keeps the old value when a refresh fails (retry
-after `retryMs`), and only throws when nothing was ever loaded. `peek()` returns
+after `retryMs`), and only throws when nothing was ever loaded. After `invalidate()` the next
+`get()` waits for one fresh load (another one if a write lands meanwhile), so a write is read back at once. `peek()` returns
 `{ value, loadedAt, error, loading, stale }` for freshness banners. Why every
 server uses it: [ECOSYSTEM 4.6](docs/ECOSYSTEM.md).
 

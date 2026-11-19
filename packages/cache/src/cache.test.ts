@@ -58,7 +58,7 @@ describe("readThrough", () => {
     expect(load).toHaveBeenCalledTimes(2);
   });
 
-  it("refreshes after invalidate, as a write would", async () => {
+  it("waits for fresh data after invalidate, so a write is seen at once", async () => {
     const load = vi
       .fn()
       .mockResolvedValueOnce("rows-1")
@@ -67,11 +67,34 @@ describe("readThrough", () => {
     await cache.get();
 
     cache.invalidate();
-    expect(cache.peek().stale).toBe(true);
-    await cache.get();
-    await settle();
 
+    expect(cache.peek().stale).toBe(true);
     expect(await cache.get()).toBe("rows-2");
+    expect(cache.peek().stale).toBe(false);
+  });
+
+  it("reloads again when a write lands during a load", async () => {
+    let release: (rows: string) => void = () => undefined;
+    const load = vi
+      .fn()
+      .mockResolvedValueOnce("rows-1")
+      .mockImplementationOnce(
+        () =>
+          new Promise<string>((resolve) => {
+            release = resolve;
+          }),
+      )
+      .mockResolvedValueOnce("rows-3");
+    const cache = readThrough(load, { ttlMs: TTL_MS });
+    await cache.get();
+    cache.invalidate();
+    const reading = cache.get();
+
+    cache.invalidate();
+    release("rows-2");
+
+    expect(await reading).toBe("rows-3");
+    expect(load).toHaveBeenCalledTimes(3);
   });
 
   it("keeps the old value on a failed refresh and retries after retryMs", async () => {

@@ -30,6 +30,8 @@ export function readThrough<T>(
   let attemptedAt = Number.NEGATIVE_INFINITY;
   let error: Error | null = null;
   let inFlight: Promise<T> | null = null;
+  let writes = 0;
+  let loadedWrites = 0;
 
   const isStale = () =>
     !hasValue || loadedAt === null || now() - loadedAt >= options.ttlMs;
@@ -38,11 +40,13 @@ export function readThrough<T>(
   const refresh = (): Promise<T> => {
     if (inFlight) return inFlight;
     attemptedAt = now();
+    const writesAtStart = writes;
     inFlight = load()
       .then((loaded) => {
         value = loaded;
         hasValue = true;
         loadedAt = now();
+        loadedWrites = writesAtStart;
         error = null;
         return loaded;
       })
@@ -62,6 +66,10 @@ export function readThrough<T>(
         if (error && !inFlight && !isDue()) throw error;
         return refresh();
       }
+      if (loadedWrites !== writes) {
+        await refresh();
+        return loadedWrites === writes ? (value as T) : refresh();
+      }
       if (isStale() && isDue()) refresh().catch(() => undefined);
       return value as T;
     },
@@ -71,11 +79,11 @@ export function readThrough<T>(
         loadedAt,
         error,
         loading: inFlight !== null,
-        stale: isStale(),
+        stale: isStale() || loadedWrites !== writes,
       };
     },
     invalidate() {
-      loadedAt = null;
+      writes += 1;
       attemptedAt = Number.NEGATIVE_INFINITY;
     },
   };
