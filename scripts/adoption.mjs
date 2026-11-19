@@ -33,7 +33,7 @@ export const APPS = [
   { repo: "notes", ui: true, sso: true },
   { repo: "monitor", ui: true, sso: true },
   { repo: "share", ui: true, sso: true },
-  { repo: "stitch-learn-ai", ui: true, sso: true, note: "ai-english web" },
+  { repo: "ai-english", ui: true, sso: true },
   { repo: "webhook-tester", ui: true, sso: true, note: "hooks" },
   { repo: "games", ui: true, sso: true },
   { repo: "huyabhome", ui: true, sso: false },
