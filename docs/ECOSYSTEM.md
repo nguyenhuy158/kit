@@ -2,7 +2,7 @@
 
 How the repos under `personal-projects/` relate to each other: who calls whom, which
 contracts they share, and where `kit` fits. Every relationship cites the file that
-proves it (paths are relative to `personal-projects/`). Snapshot taken 2026-10-03; when
+proves it (paths are relative to `personal-projects/`). Snapshot taken 2026-10-03, databases updated 2026-11-19; when
 a cited file changes, update this map in the same change.
 
 For a quick picture, see [ECOSYSTEM-MAP.md](ECOSYSTEM-MAP.md): the diagram and the
@@ -128,7 +128,8 @@ Edge sources:
 Cloudflare account resources referenced below:
 
 - **D1 `db`** (`6eb9cfce-f6f3-4476-8e46-7c8e954d93c1`): shared; every app prefixes its tables (`sso_`, `mailer_`, `monitor_`, `webhook_tester_`, `notes_`, `share_`, `cardstat_`). Sources: `sso/schema.sql:4`, `mailer/schema.sql:1`, `monitor/schema.sql:4`, `hooks/schema.sql:6`, `notes/schema.sql:3`, `share/schema.sql:4`, `cardstat/migrations/0001_init.sql:1`. Tables owned by a scheduled job on a VM (systemd timer or cron, not a Worker) are prefixed `cronjob_<job>_`, with the job name in snake_case, e.g. `cronjob_fnfl_release_watch_tags` (`homelab/infra-vm-setup` `setup.d/85-jobs.sh`). Exception: `cardstat/migrations/0002_auth.sql:3-52` created unprefixed `user`/`session`/`account`/`verification` tables in the shared DB.
-- **D1 `stitch-db`** (ai-english only), **D1 `chiakeo-db`** (chia-keo only), **D1 `runlater`** (runlater only).
+- **D1 `stitch-db`** (ai-english only), **D1 `runlater`** (runlater only). chia-keo moved from its own `chiakeo-db` to the shared `db` (`chiakeo_` prefix, `chia-keo/wrangler.toml`). zalo (`zalo_`, `zalo/worker/wrangler.jsonc`), caro (`caro_`), auto-rename, shopee-tracker and the infra-hosts gate (`LUMI_DB`) also write to `db`.
+- **Turso `pr-review-tasks`** (Singapore): the PR dashboard's Tasks store, used when `TASKS_TURSO_URL` is set (`infra-selfhost/apps/pr-review-web/server/src/tasks-store.ts`, README "Store"). The only Turso database so far. See [Databases: D1 vs Turso](#6-databases-d1-vs-turso).
 - **Migration history:** each app on `db` keeps its own `migrations_table` (`sso_migrations`, `mailer_migrations`, `monitor_migrations`, `webhook_tester_migrations`, `notes_migrations`, `share_migrations`, `cardstat_migrations`, `mytools_migrations`) and a `migrations/0000_baseline.sql` taken from production on 2026-10-18. The shared `d1_migrations` is legacy: it still holds cardstat's rows and three drizzle rows of an app that is not in `personal-projects/`.
 - **Legacy names kept on purpose:** cardstat's unprefixed `user` (its tables reference it, `cardstat/migrations/0005_drop_better_auth.sql`), huyabhome' unprefixed `projects`. Tables no repo here owns: `caro_*`, `shoperr_*` (shopee-tracker), `hono_auth_*`.
 
@@ -167,7 +168,7 @@ Cloudflare account resources referenced below:
 - **Depends on:** sso (`chia-keo/worker/src/sso.ts`, browser links in `chia-keo/src/adapters/browser/sso.ts:4-24`); mailer via `MAILER` + `MAILER_KEY` (`chia-keo/wrangler.toml`, `chia-keo/worker/src/env.ts:14`).
 - **Depended on by:** chia-keo-ios (`chia-keo-ios/ChiaKeo/API.swift:410`); Claude MCP clients via `/api/mcp` (`chia-keo/worker/src/mcp/http.ts`, `chia-keo/src/components/McpTokenPanel.tsx:118`).
 - **Auth:** better-auth session first, then `huyab_sso` cookie or `Authorization: Bearer <sso jwt>` (`chia-keo/worker/src/lib/require-user.ts:42-54`, `chia-keo/worker/src/sso.ts:62-68`); MCP uses its own bearer tokens.
-- **Data:** D1 `chiakeo-db` via Drizzle (`chia-keo/wrangler.toml`).
+- **Data:** D1 `db` (`chiakeo_` prefix) via Drizzle (`chia-keo/wrangler.toml`).
 - **Deploy:** Workers Builds on push to `main` (`chia-keo/AGENTS.md:271`).
 
 ### chia-keo-ios / notes-ios / monitor-ios
@@ -384,7 +385,32 @@ rule existed.
 | `@huyab/config` | per-repo `biome.json` (ai-english, ai-english-expo, chia-keo, hooks, mailer, monitor, huyabhome, notes, games, share, sso, ui-kit, xo-expo) and `tsconfig.json` strict settings |
 | `kit/.github/workflows/check.yml` | per-repo `.github/workflows/ci.yml` lint/check/build/e2e jobs |
 
-## 6. How to add a new app
+## 6. Databases: D1 vs Turso
+
+Two SQLite services, both free plans. D1 limits reset **every day** (00:00 UTC); Turso limits are
+**per month** (reset on the 1st), so a burst early in the month can block writes until the reset.
+
+| Per day | D1 free (whole account) | Turso free (÷30) |
+| --- | --- | --- |
+| Rows written | 100k | ~333k (10M / month) |
+| Rows read | 5M | ~16.7M (500M / month) |
+| Storage | 5 GB total | 5 GB total |
+| Over the limit | every write in the account fails until 00:00 UTC | writes blocked until the 1st |
+
+D1 quotas are per **account**, not per database: one noisy app on any D1 database stops writes
+everywhere, including `sso_users` on Google sign-in. That happened on 2026-11-19 when
+`zalo_messages` upserts reached ~249k rows/day (`wrangler d1 insights db --sort-by writes`).
+
+Where a new table goes:
+
+- **D1 `db`** (default): small apps and anything on the sign-in path. Prefix tables, own
+  `migrations_table`, keep writes well under ~10k rows/day.
+- **Turso, one database per app**: write-heavy or bulk sync data (message mirrors, logs, task
+  stores), so its quota cannot take down sign-in. Today: `pr-review-tasks`.
+- Before shipping an app that writes on a schedule, estimate rows/day and check
+  `wrangler d1 insights db --sort-by writes --timePeriod 1d` after the first day.
+
+## 7. How to add a new app
 
 1. **Name & domain.** Pick `<app>.huyab.cfd`. In `wrangler.jsonc` set `"workers_dev": false`
    and `"routes": [{ "pattern": "<app>.huyab.cfd", "custom_domain": true }]`
