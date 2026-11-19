@@ -37,6 +37,7 @@ khác nhau ở **màu nền** và **món đồ trên đầu** capybara. Ảnh t�
 | tc-api-team | `#c7e8f3` | `#2b7fa0` | phích cắm điện |
 | review | `#f6d6f0` | `#b8327e` | kính lúp |
 | home (app desktop) | `#d9e4ec` | `#4a6fa5` | hộp đồ nghề |
+| arch | `#f6e7c1` | `#c0392b` | biển ga tàu điện tròn |
 
 App mới: thêm 1 dòng (màu nền pastel chưa dùng + màu nhấn + đồ vật) bằng PR vào repo này.
 
