@@ -9,6 +9,7 @@ How the repos relate is mapped in [docs/ECOSYSTEM.md](docs/ECOSYSTEM.md).
 | [`@huyab/config`](#huyabconfig) | Shared `biome.json` and `tsconfig.base.json` |
 | [`@huyab/sso`](#huyabsso) | Verify the `huyab_sso` cookie / Bearer JWT from auth.huyab.cfd; Hono `requireUser()` |
 | [`@huyab/e2e`](#huyabe2e) | Local E2E plumbing: dev-server lifecycle, Chromium lookup, fetch harness, local-only guard, fake SSO issuer |
+| [`@huyab/cache`](#huyabcache) | In-process read-through cache: stale-while-revalidate, single-flight loads, invalidate after writes |
 
 Install any package with its path inside this repo (quote it: `&` is special in
 the shell):
@@ -151,6 +152,32 @@ finish();
 | `startSsoMock()` | Fake issuer on a free port: `{ issuer, mintToken(email, name?), close() }`. |
 | `assertFitsViewport(page, { viewports?, ignore?, label? })` | Playwright page check: at phone (390x844), small phone (360x640) and desktop (1280x720) the page and every `overflow: auto/scroll` pane must not scroll. `ignore` takes CSS selectors that may scroll on purpose (a form Sheet, a help page). Restores the viewport; throws naming the viewport and element. |
 | `findScrollOverflow(page, options?)`, `DEFAULT_VIEWPORTS` | Same check, returns the failing viewports instead of throwing. |
+
+## `@huyab/cache`
+
+```sh
+pnpm add "github:nguyenhuy158/kit#vX.Y.Z&path:packages/cache"
+```
+
+```ts
+import { readThrough } from "@huyab/cache";
+
+const tasks = readThrough(() => db.query("SELECT * FROM tasks"), { ttlMs: 60_000, retryMs: 30_000 });
+
+app.get("/api/tasks", async (c) => c.json(await tasks.get()));
+app.post("/api/tasks", async (c) => {
+  await db.insert(await c.req.json());
+  tasks.invalidate();
+  return c.body(null, 204);
+});
+```
+
+`get()` loads once per `ttlMs`, shares one load between concurrent callers, serves
+the stale value while refreshing, keeps the old value when a refresh fails (retry
+after `retryMs`), and only throws when nothing was ever loaded. After `invalidate()` the next
+`get()` waits for one fresh load (another one if a write lands meanwhile), so a write is read back at once. `peek()` returns
+`{ value, loadedAt, error, loading, stale }` for freshness banners. Why every
+server uses it: [ECOSYSTEM 4.6](docs/ECOSYSTEM.md).
 
 ## Reusable CI
 

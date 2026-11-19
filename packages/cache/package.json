@@ -1,0 +1,13 @@
+{
+  "name": "@huyab/cache",
+  "version": "0.1.0",
+  "description": "In-process read-through cache: stale-while-revalidate, single-flight loads, invalidate after writes",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src",
+    "!src/**/*.test.ts"
+  ]
+}

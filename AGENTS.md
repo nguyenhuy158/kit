@@ -16,6 +16,9 @@ packages/
     src/index.ts           #   verifySsoToken, readSsoToken, getClaimsFromRequest, ssoUrl
     src/hono.ts            #   @huyab/sso/hono: requireUser() middleware (hono = optional peer)
     src/sso.test.ts        #   RS256 key generated per run, JWKS served by a stubbed fetch
+  cache/                   # @huyab/cache — readThrough(): in-process SWR cache, single-flight, invalidate()
+    src/index.ts
+    src/cache.test.ts
   e2e/                     # @huyab/e2e — plain ESM JavaScript for Node scripts
     src/server.js          #   startServer (process-group lifecycle), run, freePort
     src/chromium.js        #   findChromium

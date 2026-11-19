@@ -24,6 +24,8 @@ importers:
         specifier: ^4.1.9
         version: 4.1.11(@types/node@22.20.5)(vite@8.3.2(@types/node@22.20.5))
 
+  packages/cache: {}
+
   packages/config: {}
 
   packages/e2e: {}
