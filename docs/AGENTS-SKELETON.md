@@ -60,6 +60,14 @@ keyboard that matches its data: `type="email"`, `"tel"`, `"url"` or
 it. ui-kit `Input` adds `inputMode` and `autoComplete` from `type`; plain HTML
 fields set them by hand.
 
+## Analytics rule
+
+Applies to every app with a UI that uses PostHog. Personal apps use the bws key
+`POSTHOG_PERSONAL_KEY`, passed as the build variable `VITE_POSTHOG_KEY` (and
+`VITE_POSTHOG_HOST` if the project is not on US cloud). Never commit the key.
+No key means no events. No session recording and no user identity. See
+`docs/ECOSYSTEM.md` section 4.6.
+
 ## Delivery rule
 
 Applies to `kit`, `ui-kit` and every app that uses them.
