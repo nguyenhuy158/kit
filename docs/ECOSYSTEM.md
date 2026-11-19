@@ -376,6 +376,17 @@ one invalidation; a single container or Worker isolate does not need it.
 review.huyab.cfd hit the D1 free-plan daily limits on 19/11/2026 before this
 rule existed.
 
+### 4.6 Analytics: PostHog
+
+- Personal apps send page views to PostHog with the key stored in bws as
+  `POSTHOG_PERSONAL_KEY`. Do not use `POSTHOG_KEY` or the `TECHCOOP_*` keys for them.
+- The key is a public project key (`phc_...`) but it is not committed. Set it as the build
+  variable `VITE_POSTHOG_KEY` in Cloudflare Workers Builds. Set `VITE_POSTHOG_HOST` only if
+  the project is not on US cloud.
+- No key means no events: init returns early, so dev, tests and CI send nothing.
+- No session recording and no user name or email.
+- First user: `chia-keo` (`src/adapters/browser/analytics.ts`, called from `src/main.tsx`).
+
 ## 5. kit packages: what they replace
 
 | Package | Replaces (copies today) |
