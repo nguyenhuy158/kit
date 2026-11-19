@@ -360,6 +360,21 @@ Tokens stay copy-paste for now (ui-kit is intentionally not a package,
 - Limit: `overflow: hidden` clipping is not reported, so a page that hides content still
   passes. Use `PagedList`, and look at screenshots.
 
+### 4.6 Reads go through a cache, not straight to the database
+
+A page view, poll or MCP call must not cost one database query. Every server
+that reads D1, Turso or another per-request-billed store wraps those reads in
+`@huyab/cache` `readThrough(load, { ttlMs })`: one load per TTL however many
+readers, concurrent first reads share one query, a stale value is served at once
+while it refreshes, and the old value is kept when a refresh fails. Call
+`invalidate()` after every write so the next read sees it. Clients follow the
+`ui-kit` fetch rule (`useCachedFetch`): no polling faster than the server's TTL.
+
+Reach for Redis / Upstash only when several instances must share one cache or
+one invalidation; a single container or Worker isolate does not need it.
+review.huyab.cfd hit the D1 free-plan daily limits on 19/11/2026 before this
+rule existed.
+
 ## 5. kit packages: what they replace
 
 | Package | Replaces (copies today) |
