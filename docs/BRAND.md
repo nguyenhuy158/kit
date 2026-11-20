@@ -30,6 +30,7 @@ khác nhau ở **màu nền** và **món đồ trên đầu** capybara. Ảnh t�
 | games | `#ffb5a7` | `#d6452f` | tay cầm chơi game |
 | huyabhome | `#d0f4de` | `#2c9a5c` | ngôi nhà nhỏ |
 | resume | `#f1e3d3` | `#9a6b3f` | tờ giấy hồ sơ |
+| vite-profile (portfolio) | `#f4f1bb` | `#3d5a80` | laptop nhỏ mở nắp |
 | sso | `#d7d3ff` | `#5a4fcf` | chìa khoá |
 | mailer | `#ffdfd3` | `#e0603a` | phong bì |
 | ui-kit | `#e4c1f9` | `#9b4dca` | bảng màu vẽ |
