@@ -74,6 +74,33 @@ moves when its owner next restructures it, in its own pull request.
 - Name the TypeScript project for the Worker `tsconfig.backend.json`.
 - Libraries (`kit`) and the `ui-kit` gallery have no backend and keep a plain `src/`.
 
+## Help rule
+
+Applies to every app with a UI that people must learn to use. `chia-keo` is the
+reference: `frontend/src/routes/HelpPage.tsx`, `help-content.ts`,
+`HelpPage.dom.test.ts` and the screenshots in `public/help/`.
+
+- The app has a `/help` page, linked from its menu or settings. It is a
+  reading-only page, so it may scroll (exception in the One-screen rule).
+- The text is data, not JSX: one `help-content.ts` file exports groups, each with
+  topics. A group has `id`, `title` and `topics`. A topic has `id`, `title`,
+  `steps` (strings), an optional `image` (`src`, `alt`) and optional `links`
+  (`label`, `to`).
+- One topic is one task the user wants to do. Group topics by that goal, not by
+  screen. Write steps as short commands and put the exact button name in quotes.
+- Show topics in the ui-kit `Accordion`: one `h1` for the page and one `h2` per
+  group (`aria-labelledby`). Do not hand-roll an accordion.
+- Screenshots live in `public/help/<topic-id>.png`. Every image has `alt` text. Use
+  test data only: no real names, amounts, account numbers or secrets.
+- `to` in a link is a union of the app's real routes, so the type checker rejects
+  a page that does not exist.
+- Write the help in the languages the app UI supports (same i18n as the app).
+- A pull request that renames a button, moves a screen or adds a feature updates
+  the matching help topic in the same pull request.
+- Add a test that checks: topic ids are unique, every topic has at least one step,
+  every `alt` is not empty, every image file exists, every link target is a known
+  page.
+
 ## Analytics rule
 
 Applies to every app with a UI that uses PostHog. Personal apps use the bws key
