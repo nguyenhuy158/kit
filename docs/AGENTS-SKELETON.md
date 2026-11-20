@@ -101,6 +101,39 @@ reference: `frontend/src/routes/HelpPage.tsx`, `help-content.ts`,
   every `alt` is not empty, every image file exists, every link target is a known
   page.
 
+## Access control rule
+
+Applies to every app and API with sign-in. Checklist: `docs/RBAC-CHECKLIST.md`.
+
+- Who you are comes only from SSO (`@huyab/sso`: the `huyab_sso` cookie, or a Bearer
+  token for CLIs and native apps). No sign-in means `401`; in Hono use
+  `requireUser()` from `@huyab/sso/hono`.
+- Deny by default. Every `/api/*` route needs the sign-in check, except the ones
+  named public on purpose (`/api/version`, `/api/health`, a share link). A new route
+  is private until someone writes down why it is public.
+- Roles live in the app's data, not in the SSO token. SSO says who you are, the app
+  says what you may do. The roles in use:
+  - owner: the user who created the row (`user_id` or `user_email` column);
+  - collaborator: invited to one resource (`chia-keo` game collaborators);
+  - admin: the email equals an `ADMIN_EMAIL` variable (the `mailer` log page).
+- Check on the server, in one place, never in the UI. Put the rule in one policy or
+  use-case function (`chia-keo`: `getAccessibleGame` for owner and collaborator,
+  `getOwnedGame` for owner only) and make every route call it.
+- Load a row by id and owner together (`WHERE id = ? AND user_id = ?`), never by id
+  alone (`notes`: `findOwnedNote`).
+- Status codes: `401` not signed in. `404` when the row is not yours or does not
+  exist (do not tell which). `403` only when the user can already see the resource
+  but may not do this action.
+- Machine access is narrower than user access: a token has scopes (`chia-keo` MCP
+  `MCP_SCOPES`), is stored as a hash and shown once. Service-to-service calls use a
+  service binding plus a secret header (`mailer`: `INTERNAL_API_KEY`). A master
+  password is for CLIs and agents only (`share`).
+- A public link uses a random token, a rate limit and a way to turn it off
+  (`chia-keo` share links).
+- Never put a secret, token or password hash in a log or an API response.
+- Test the roles: owner is allowed, another user gets `404`, a collaborator cannot do
+  an owner-only action, no sign-in gets `401`.
+
 ## Analytics rule
 
 Applies to every app with a UI that uses PostHog. Personal apps use the bws key
