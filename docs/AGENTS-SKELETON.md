@@ -60,6 +60,20 @@ keyboard that matches its data: `type="email"`, `"tel"`, `"url"` or
 it. ui-kit `Input` adds `inputMode` and `autoComplete` from `type`; plain HTML
 fields set them by hand.
 
+## Layout rule
+
+Applies to every app that has a browser frontend and a Worker backend in one
+repo (for example `chia-keo`). New apps follow it from the start; an existing app
+moves when its owner next restructures it, in its own pull request.
+
+- Frontend code lives in `frontend/src/`, backend (Worker) code in `backend/src/`.
+- Code used by both lives in `shared/` at the repo root: pure logic and types, no
+  IO, no `window`, no `fetch`.
+- Root files stay at the root: `index.html`, `public/`, `vite.config.ts`,
+  `wrangler.toml`, `package.json`.
+- Name the TypeScript project for the Worker `tsconfig.backend.json`.
+- Libraries (`kit`) and the `ui-kit` gallery have no backend and keep a plain `src/`.
+
 ## Analytics rule
 
 Applies to every app with a UI that uses PostHog. Personal apps use the bws key
