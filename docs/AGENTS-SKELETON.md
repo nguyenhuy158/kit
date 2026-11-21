@@ -177,6 +177,7 @@ No key means no events. No session recording and no user identity. See
 
 Applies to every repo that ships a command line. `chia-keo` is the reference:
 `cli/chiakeo.mjs`, `cli/package.json` and `cli/README.md`.
+Checklist and steps to create one: `docs/CLI-CHECKLIST.md`.
 
 - Write all CLI text in simple English (CEFR A2): help, prompts, errors and
   success messages. Short sentences, common words. The CLI does not follow the
