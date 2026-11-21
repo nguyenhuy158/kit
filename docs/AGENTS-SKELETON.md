@@ -174,6 +174,8 @@ Checklist: `docs/RFC-CHECKLIST.md`.
   OAuth and tokens, JWT and keys, HTTP and API, data formats, MCP and discovery.
 - API errors are `application/problem+json` (RFC 9457). A rate limit is `429` with
   `Retry-After`. A Bearer failure is `401` with `WWW-Authenticate`.
+- An app with a UI also follows the "Frontend" and "Web standards" groups of the
+  checklist (language tags, caching headers, dates, partial updates).
 - A device or CLI sign-in follows RFC 8628: `docs/CLI-CHECKLIST.md`.
 - A pull request that adds or changes an API route, token or cookie says in the
   description which checklist lines it touched.
