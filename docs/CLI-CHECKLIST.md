@@ -46,6 +46,42 @@ why it does not apply.
 - [ ] The server stores only a hash of the token and the user can revoke it.
 - [ ] The token is never printed, logged or put in an error message.
 
+## Device sign-in (RFC 8628)
+
+Standard: [RFC 8628](https://datatracker.ietf.org/doc/html/rfc8628). Use it for
+every CLI, native app or device that cannot show a web sign-in page.
+
+Server (routes live under `/api/*`):
+
+- [ ] `POST /api/login/device/code` returns `device_code`, `user_code`,
+      `verification_uri`, `expires_in` and `interval`. It accepts JSON and
+      form-urlencoded.
+- [ ] `POST /api/login/oauth/access_token` accepts
+      `grant_type=urn:ietf:params:oauth:grant-type:device_code` and `device_code`.
+- [ ] Poll errors use HTTP 400 with `error`: `authorization_pending`, `slow_down`,
+      `expired_token`, `access_denied`. A wrong `grant_type` or an unknown
+      `device_code` is an error too, never a token.
+- [ ] `device_code` is long and random. The server stores only its SHA-256.
+- [ ] `user_code` is short, easy to type (no `0/O`, `1/I`), shown in groups
+      (`ABCD-EFGH`) and compared without case or dash.
+- [ ] Codes live 10 minutes at most. `interval` is 5 seconds. Polling faster gets
+      `slow_down` and the CLI adds 5 seconds.
+- [ ] Wrong `user_code` tries are rate limited, so nobody can guess a code.
+- [ ] The approve page (`/login/device`) needs a real web session. It shows which
+      app and device ask for access, and asks to approve or deny.
+- [ ] The server creates the token when the user approves. The CLI gets it once,
+      then the row is deleted.
+- [ ] The device token cannot create other tokens (no `/api/mcp-tokens`).
+- [ ] The approve page is a root route, not inside the app layout, and uses only
+      ui-kit parts.
+
+CLI:
+
+- [ ] `up` prints the link and the code, then polls. It stops on `expired_token`
+      or `access_denied` with one line and exit code `1`.
+- [ ] The poll waits `interval` seconds and obeys `slow_down`.
+- [ ] The CLI sends a device name so the user sees it on the approve page.
+
 ## Package
 
 - [ ] Plain Node ESM, Node 22 or newer, no build step, no dependencies.
