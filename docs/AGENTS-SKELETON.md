@@ -186,6 +186,9 @@ Checklist and steps to create one: `docs/CLI-CHECKLIST.md`.
   dependencies. The `bin` name is the app name.
 - Sign in with a device code: `up` prints a link and a code, the user approves on
   the web, and `down` deletes the token. The CLI never asks for a password.
+- The device code follows RFC 8628 (OAuth 2.0 Device Authorization Grant). The
+  server rules and the checklist are in `docs/CLI-CHECKLIST.md`, "Device sign-in
+  (RFC 8628)". Reference: `chia-keo` `AGENTS.md`.
 - Save the token in `~/.config/<app>/config.json` with mode 600. An env variable
   (`<APP>_CONFIG`) can change the path. Never print the token.
 - Running the CLI with no arguments prints the help. A wrong command, a missing
