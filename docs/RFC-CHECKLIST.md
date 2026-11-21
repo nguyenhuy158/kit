@@ -85,3 +85,41 @@ Links use `https://datatracker.ietf.org/doc/html/rfc<number>`.
 - RFC 8414 (authorization server metadata)
   - [ ] The issuer serves `/.well-known/oauth-authorization-server` with its endpoints,
         `jwks_uri` and supported grants.
+
+## Frontend
+
+- RFC 5646 (BCP 47 language tags)
+  - [ ] `<html lang>` matches the UI language (`vi`, `en`). Set it again when the user changes language.
+  - [ ] Use `Intl` with the same tag for dates, numbers and money. Mark a block in another language with its own `lang`.
+- RFC 4648 (Base64)
+  - [ ] Use base64url (no `+`, `/` or `=`) for PKCE, JWT parts and anything in a URL.
+  - [ ] Plain base64 is only for bodies and `data:` URIs.
+- RFC 2397 (`data:` URI)
+  - [ ] Use `data:` only for small images (thumbnails, previews). Big files go by URL.
+  - [ ] Never put a user-given `data:` URL in `href` or `src` without checking the media type.
+- RFC 3339 (date and time)
+  - [ ] API times are RFC 3339 in UTC (`2026-11-21T10:00:00Z`). The UI converts to local time.
+  - [ ] A date with no time stays `"YYYY-MM-DD"` (ui-kit `DatePicker`). Never build it from a `Date` in local time.
+- RFC 7396 (JSON Merge Patch), RFC 6902 (JSON Patch)
+  - [ ] A partial update sends only the changed fields. An absent field means "no change".
+  - [ ] Clear a field with an explicit `null`, not by leaving it out.
+- RFC 5861 (`stale-while-revalidate`), RFC 8246 (`immutable`)
+  - [ ] Files with a hash in the name send `Cache-Control: public, max-age=31536000, immutable`.
+  - [ ] `index.html` and API reads use `no-cache` or `stale-while-revalidate`, never a long `max-age`.
+  - [ ] A client cache (ui-kit `useCachedFetch`) revalidates when stale and does not poll.
+- RFC 8288 (`Link` header)
+  - [ ] Preload the main font and the main script with `Link: <...>; rel=preload`.
+  - [ ] A paged list follows `rel="next"` from the server, not a built URL.
+- RFC 6455 (WebSocket)
+  - [ ] Use `wss://` only. Check the `Origin` on the server and sign in before the upgrade.
+  - [ ] Reconnect with a growing delay and a limit. Close the socket when the page hides.
+- RFC 9116 (`security.txt`)
+  - [ ] Every public site serves `/.well-known/security.txt` with `Contact` and `Expires`.
+
+## Web standards that are not RFCs
+
+- CORS (WHATWG Fetch): see HTTP and API above. A browser call with cookies needs the exact origin.
+- CSP and SRI (W3C): send a `Content-Security-Policy` without `unsafe-inline` where the app allows.
+  Add `integrity` to every script or style loaded from a CDN.
+- WCAG 2.2 AA (W3C): ui-kit runs axe-core in `e2e/a11y.mjs`. Apps run the same check on their screens.
+- WHATWG HTML and URL: build URLs with `URL` and `URLSearchParams`, never with string joins.
