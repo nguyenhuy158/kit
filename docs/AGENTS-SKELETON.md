@@ -173,6 +173,26 @@ Applies to every app with a UI that uses PostHog. Personal apps use the bws key
 No key means no events. No session recording and no user identity. See
 `docs/ECOSYSTEM.md` section 4.6.
 
+## CLI rule
+
+Applies to every repo that ships a command line. `chia-keo` is the reference:
+`cli/chiakeo.mjs`, `cli/package.json` and `cli/README.md`.
+
+- Write all CLI text in simple English (CEFR A2): help, prompts, errors and
+  success messages. Short sentences, common words. The CLI does not follow the
+  app UI language.
+- One file per CLI, plain Node ESM (Node 22 or newer), no build step and no
+  dependencies. The `bin` name is the app name.
+- Sign in with a device code: `up` prints a link and a code, the user approves on
+  the web, and `down` deletes the token. The CLI never asks for a password.
+- Save the token in `~/.config/<app>/config.json` with mode 600. An env variable
+  (`<APP>_CONFIG`) can change the path. Never print the token.
+- Running the CLI with no arguments prints the help. A wrong command, a missing
+  argument or an API error prints one short line and exits with code 1.
+- Name every magic string and number as a constant. Do not add comments that only
+  repeat the code.
+- Add an e2e check that runs the real binary: `up`, one read, one write, `down`.
+
 ## Delivery rule
 
 Applies to `kit`, `ui-kit` and every app that uses them.
