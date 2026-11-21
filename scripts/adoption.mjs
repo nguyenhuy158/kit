@@ -26,7 +26,7 @@ export const MARK = { done: "✅", missing: "❌", na: "—", old: "⚠️" };
 /** @typedef {{ repo: string, ui: boolean, sso: boolean, note?: string }} App */
 
 /** @type {App[]} */
-export const APPS = [
+const APPS = [
   { repo: "sso", ui: true, sso: false, note: "issuer, signs its own tokens" },
   { repo: "mailer", ui: false, sso: true },
   { repo: "chiakeo", ui: true, sso: true },
@@ -162,7 +162,7 @@ function uiRow(app, uiKitFiles) {
 }
 
 /** @param {string[]} header @param {string[][]} rows */
-export function table(header, rows) {
+function table(header, rows) {
   const line = (/** @type {string[]} */ cells) => `| ${cells.join(" | ")} |`;
   return [line(header), line(header.map(() => "---")), ...rows.map(line)].join(
     "\n",

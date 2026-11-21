@@ -1,0 +1,5 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": ["brand/generate.mjs"],
+  "ignoreBinaries": ["build", "e2e", "playwright-core", "rsvg-convert"]
+}
