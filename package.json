@@ -7,16 +7,43 @@
     "node": ">=22"
   },
   "scripts": {
-    "check": "biome check . && tsc",
+    "check": "biome check . && tsc && knip && size-limit",
     "test": "vitest run",
     "lint": "biome check .",
-    "format": "biome format --write ."
+    "format": "biome format --write .",
+    "knip": "knip",
+    "size": "size-limit",
+    "precommit": "lefthook run pre-commit"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.15",
     "@huyab/config": "workspace:*",
+    "@size-limit/preset-small-lib": "^14.3.0",
     "@types/node": "^22.0.0",
+    "knip": "^6.46.1",
+    "lefthook": "^2.2.2",
+    "size-limit": "^14.3.0",
     "typescript": "^5.7.0",
     "vitest": "^4.1.9"
-  }
+  },
+  "size-limit": [
+    {
+      "name": "@huyab/sso",
+      "path": "packages/sso/src/index.ts",
+      "limit": "1.5 kB"
+    },
+    {
+      "name": "@huyab/sso/hono",
+      "path": "packages/sso/src/hono.ts",
+      "ignore": [
+        "hono"
+      ],
+      "limit": "1.5 kB"
+    },
+    {
+      "name": "@huyab/cache",
+      "path": "packages/cache/src/index.ts",
+      "limit": "700 B"
+    }
+  ]
 }

@@ -50,6 +50,9 @@ See the [huyab.cfd ecosystem map](docs/ECOSYSTEM.md) for how all personal repos 
 - `pnpm check`: `biome check .` then `tsc` (TS and JSDoc-typed JS, `checkJs`).
 - `pnpm test`: Vitest, colocated `*.test.ts` / `*.test.js`.
 - `pnpm lint` / `pnpm format`: Biome check / format. Format only files you touch.
+- `pnpm knip`: unused files, exports and dependencies (part of `pnpm check`).
+- `pnpm size`: size-limit budget per package, also part of `pnpm check` (`size-limit` in `package.json`).
+- `lefthook.yml`: pre-commit runs Biome and `tsc` on staged files (`pnpm exec lefthook install`).
 
 Use `pnpm` for everything (`pnpm exec ...`, never `npx`).
 
