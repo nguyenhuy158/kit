@@ -165,6 +165,20 @@ Applies to every app and API with sign-in. Checklist: `docs/RBAC-CHECKLIST.md`.
 - Test the roles: owner is allowed, another user gets `404`, a collaborator cannot do
   an owner-only action, no sign-in gets `401`.
 
+## Standards rule
+
+Applies to every app and API with sign-in, tokens, cookies or a public HTTP API.
+Checklist: `docs/RFC-CHECKLIST.md`.
+
+- Follow the RFC, not a private habit. The checklist lists the RFC for each topic:
+  OAuth and tokens, JWT and keys, HTTP and API, data formats, MCP and discovery.
+- API errors are `application/problem+json` (RFC 9457). A rate limit is `429` with
+  `Retry-After`. A Bearer failure is `401` with `WWW-Authenticate`.
+- A device or CLI sign-in follows RFC 8628: `docs/CLI-CHECKLIST.md`.
+- A pull request that adds or changes an API route, token or cookie says in the
+  description which checklist lines it touched.
+- If the repo cannot follow a line, write the reason in its `AGENTS.md`.
+
 ## Analytics rule
 
 Applies to every app with a UI that uses PostHog. Personal apps use the bws key
