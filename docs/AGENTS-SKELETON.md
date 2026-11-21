@@ -101,6 +101,37 @@ reference: `frontend/src/routes/HelpPage.tsx`, `help-content.ts`,
   every `alt` is not empty, every image file exists, every link target is a known
   page.
 
+## Settings rule
+
+Applies to every app with a UI that has options the user can change. References:
+`notes` `frontend/src/screens/SettingsScreen.tsx` (full page) and `chia-keo`
+`frontend/src/routes/SettingsPage.tsx`. An existing app moves to this rule when
+its Settings page is next changed.
+
+- The app has one Settings page, linked from its menu or bottom nav. Every option
+  the user can change lives there, not spread over other screens.
+- Groups come in this order; skip a group the app does not have: account (name
+  and email from SSO), look (theme, language), app options, data (export, trash),
+  the `/help` link, sign out.
+- One group is one ui-kit `Card` with a title. Use only ui-kit primitives:
+  `Switch` for on/off, `Radio` or `Listbox` for a choice, `Field` + `Input` for
+  text and numbers, `ThemeToggle` for the theme. Do not hand-roll a control.
+- A switch or a choice saves at once. A text or number field has its own Save
+  button. There is no Save button for the whole page. A failed save shows a
+  Toast and puts the old value back.
+- Where a value lives: an option for this device only (theme, language, PIN lock)
+  goes in `localStorage`; an option the server needs or that must follow the user
+  to other devices goes in the app's database through the API (`monitor`:
+  `PUT /api/settings`; `chia-keo`: `user_preferences`).
+- Read stored values with care: an unknown key or a broken value falls back to
+  the default. One bad row must not break the page.
+- Sign out is the last item, in the danger style, and goes to `/logout`. An action
+  that deletes data asks first with `useConfirm()`.
+- The One-screen rule still applies. When the options do not fit one viewport,
+  split them with ui-kit `Tabs` or open a group as its own screen.
+- A secret (API token, PIN) is shown once or never, not printed back on the page.
+- Write the labels in the languages the app UI supports (same i18n as the app).
+
 ## Access control rule
 
 Applies to every app and API with sign-in. Checklist: `docs/RBAC-CHECKLIST.md`.
