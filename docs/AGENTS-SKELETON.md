@@ -212,6 +212,11 @@ Checklist and steps to create one: `docs/CLI-CHECKLIST.md`.
 - Name every magic string and number as a constant. Do not add comments that only
   repeat the code.
 - Add an e2e check that runs the real binary: `up`, one read, one write, `down`.
+- The CLI covers every feature of the web app. A PR that adds an app feature adds the
+  CLI command too, or says why it cannot (for example, it needs image work).
+- Publish from CI: a workflow publishes `cli/` to npm when `cli/package.json` changes on
+  `main`, and skips a version that is already on npm. Never run `npm publish` by hand.
+  Reference: `chia-keo` `.github/workflows/publish-cli.yml`.
 
 ## Delivery rule
 

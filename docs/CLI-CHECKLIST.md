@@ -15,7 +15,10 @@ why it does not apply.
 4. Add a root script (`"cli": "node cli/<app>.mjs"`) so people can run it from the repo.
 5. Add the sign-in routes to the app (device code: start, poll, approve page).
 6. Add the e2e check and a short section in the app `AGENTS.md`.
-7. Publish with a tag from CI or by hand, never from an unreviewed branch. Check with
+7. Publish from CI, never by hand: copy `.github/workflows/publish-cli.yml` from
+   `chia-keo`. It runs when `cli/package.json` changes on `main`, skips a version that
+   is already on npm (`npm view <app>@<version>`), and runs `npm publish` with the repo
+   secret `NPM_TOKEN`. To release: bump `version` and merge the PR. Check with
    `npm view <app> version`.
 
 ## Text
@@ -86,6 +89,10 @@ CLI:
 
 - [ ] Plain Node ESM, Node 22 or newer, no build step, no dependencies.
 - [ ] `README.md` shows the install command, `up`, and the Node version.
+- [ ] The release is a version bump merged to `main`. CI publishes it (`NPM_TOKEN` secret
+      set on the repo); nobody runs `npm publish` by hand.
+- [ ] A PR that adds a feature to the app adds its CLI command in the same PR, or says why
+      not (for example photo upload needs image resizing).
 - [ ] The install works with `npm i -g <app>` and with `mise use -g npm:<app>`
       (mise hides a release for its first 24 hours: pin it with `<app>@<version>`).
 
