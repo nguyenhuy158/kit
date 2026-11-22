@@ -7,6 +7,56 @@ it does not apply. Device sign-in has its own list in `docs/CLI-CHECKLIST.md`
 
 Links use `https://datatracker.ietf.org/doc/html/rfc<number>`.
 
+## Index by RFC number
+
+Find a document by its official RFC number below. The topic sections remain the
+source of project checklists shared with ui-kit. These checklists include local
+policy choices; they are not verbatim RFC requirements or proof of compliance.
+WCAG, CORS, CSP and HTML are listed separately under
+[Web standards that are not RFCs](#web-standards-that-are-not-rfcs).
+
+| RFC | Subject | Project checklist |
+| --- | --- | --- |
+| [RFC 2397](https://www.rfc-editor.org/info/rfc2397/) | Data URLs | [Frontend](#frontend) |
+| [RFC 3339](https://www.rfc-editor.org/info/rfc3339/) | Date and time | [Frontend](#frontend) |
+| [RFC 3986](https://www.rfc-editor.org/info/rfc3986/) | URI syntax | [Data formats](#data-formats) |
+| [RFC 4122](https://www.rfc-editor.org/info/rfc4122/) | UUID (legacy reference; see RFC 9562) | [Data formats](#data-formats) |
+| [RFC 4648](https://www.rfc-editor.org/info/rfc4648/) | Base64 and base64url | [Frontend](#frontend) |
+| [RFC 5321](https://www.rfc-editor.org/info/rfc5321/) | SMTP | [Data formats](#data-formats) |
+| [RFC 5322](https://www.rfc-editor.org/info/rfc5322/) | Email message format | [Data formats](#data-formats) |
+| [RFC 5646](https://www.rfc-editor.org/info/rfc5646/) | Language tags | [Frontend](#frontend) |
+| [RFC 5861](https://www.rfc-editor.org/info/rfc5861/) | Stale cache controls | [Frontend](#frontend) |
+| [RFC 6265](https://www.rfc-editor.org/info/rfc6265/) | Cookies | [Http and api](#http-and-api) |
+| [RFC 6454](https://www.rfc-editor.org/info/rfc6454/) | Web origin | [Http and api](#http-and-api) |
+| [RFC 6455](https://www.rfc-editor.org/info/rfc6455/) | WebSocket | [Frontend](#frontend) |
+| [RFC 6585](https://www.rfc-editor.org/info/rfc6585/) | Additional HTTP status codes, including 429 | [Http and api](#http-and-api) |
+| [RFC 6749](https://www.rfc-editor.org/info/rfc6749/) | OAuth 2.0 | [Oauth and tokens](#oauth-and-tokens) |
+| [RFC 6750](https://www.rfc-editor.org/info/rfc6750/) | Bearer tokens | [Oauth and tokens](#oauth-and-tokens) |
+| [RFC 6797](https://www.rfc-editor.org/info/rfc6797/) | HSTS | [Http and api](#http-and-api) |
+| [RFC 6902](https://www.rfc-editor.org/info/rfc6902/) | JSON Patch | [Frontend](#frontend) |
+| [RFC 7009](https://www.rfc-editor.org/info/rfc7009/) | Token revocation | [Oauth and tokens](#oauth-and-tokens) |
+| [RFC 7396](https://www.rfc-editor.org/info/rfc7396/) | JSON Merge Patch | [Frontend](#frontend) |
+| [RFC 7515](https://www.rfc-editor.org/info/rfc7515/) | JSON Web Signature (JWS) | [Jwt and keys](#jwt-and-keys) |
+| [RFC 7517](https://www.rfc-editor.org/info/rfc7517/) | JSON Web Key (JWK) | [Jwt and keys](#jwt-and-keys) |
+| [RFC 7518](https://www.rfc-editor.org/info/rfc7518/) | JSON Web Algorithms (JWA) | [Jwt and keys](#jwt-and-keys) |
+| [RFC 7519](https://www.rfc-editor.org/info/rfc7519/) | JSON Web Token (JWT) | [Jwt and keys](#jwt-and-keys) |
+| [RFC 7636](https://www.rfc-editor.org/info/rfc7636/) | PKCE | [Oauth and tokens](#oauth-and-tokens) |
+| [RFC 7662](https://www.rfc-editor.org/info/rfc7662/) | Token introspection | [Oauth and tokens](#oauth-and-tokens) |
+| [RFC 8246](https://www.rfc-editor.org/info/rfc8246/) | Immutable cache control | [Frontend](#frontend) |
+| [RFC 8259](https://www.rfc-editor.org/info/rfc8259/) | JSON | [Data formats](#data-formats) |
+| [RFC 8288](https://www.rfc-editor.org/info/rfc8288/) | Web Linking | [Http and api](#http-and-api) · [Frontend](#frontend) |
+| [RFC 8414](https://www.rfc-editor.org/info/rfc8414/) | Authorization server metadata | [Mcp and discovery](#mcp-and-discovery) |
+| [RFC 8628](https://www.rfc-editor.org/info/rfc8628/) | Device authorization grant | [Device sign-in](CLI-CHECKLIST.md#device-sign-in-rfc-8628) |
+| [RFC 8725](https://www.rfc-editor.org/info/rfc8725/) | JWT security best practices | [Jwt and keys](#jwt-and-keys) |
+| [RFC 9068](https://www.rfc-editor.org/info/rfc9068/) | JWT access token profile | [Oauth and tokens](#oauth-and-tokens) |
+| [RFC 9110](https://www.rfc-editor.org/info/rfc9110/) | HTTP semantics | [Http and api](#http-and-api) |
+| [RFC 9111](https://www.rfc-editor.org/info/rfc9111/) | HTTP caching | [Http and api](#http-and-api) |
+| [RFC 9116](https://www.rfc-editor.org/info/rfc9116/) | security.txt | [Frontend](#frontend) |
+| [RFC 9457](https://www.rfc-editor.org/info/rfc9457/) | HTTP API problem details | [Http and api](#http-and-api) |
+| [RFC 9562](https://www.rfc-editor.org/info/rfc9562/) | UUID | [Data formats](#data-formats) |
+| [RFC 9700](https://www.rfc-editor.org/info/rfc9700/) | OAuth 2.0 security best practices | [Oauth and tokens](#oauth-and-tokens) |
+| [RFC 9728](https://www.rfc-editor.org/info/rfc9728/) | Protected resource metadata | [Mcp and discovery](#mcp-and-discovery) |
+
 ## OAuth and tokens
 
 - RFC 6749 (OAuth 2.0), RFC 9700 (security best practice, BCP 240)
