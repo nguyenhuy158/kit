@@ -14,7 +14,7 @@ Solid arrows are runtime calls, dashed arrows are pings or shared code.
 graph TD
   subgraph Native_clients
     EXPO["ai-english-expo"]
-    CKI["chia-keo-ios"]
+    CKI["home<br/>Tauri iOS"]
     MI["monitor-ios"]
     NI["notes-ios"]
   end
@@ -81,7 +81,7 @@ Turso per month: see [ECOSYSTEM.md §6](ECOSYSTEM.md#6-databases-d1-vs-turso).
 | sso | `auth.huyab.cfd` `/login?redirect_uri=` `/logout` `/me` `/.well-known/jwks.json` | Every web app and the 3 iOS apps. Cookie `huyab_sso`, Domain `.huyab.cfd`, RS256, 24 h. `/me` is server-side only. |
 | mailer | `POST /send` (service binding `MAILER`), `GET /` log page | ai-english, chia-keo, monitor. `Authorization: Bearer MAILER_KEY`. Log page needs SSO as the admin email. |
 | ai-english | `en.huyab.cfd` `/api/auth/google` `/api/auth/me` | ai-english-expo via cookie `auth_token` (exchanged from `huyab_sso`). Calls mailer and Workers AI, cron 13:30 for streak reminders. |
-| chia-keo | `chiakeo.huyab.cfd` `/api/*` `/api/mcp` `/api/version` `/api/health` | chia-keo-ios with cookie or SSO Bearer. Claude MCP clients with `ck_...` tokens. better-auth runs in parallel with SSO. Own D1 `chiakeo-db`. |
+| chia-keo | `chiakeo.huyab.cfd` `/api/*` `/api/mcp` `/api/version` `/api/health` | home (Tauri iOS app, replaces the archived chia-keo-ios) with SSO Bearer. Claude MCP clients with `ck_...` tokens. better-auth runs in parallel with SSO. Own D1 `chiakeo-db`. |
 | notes | `notes.huyab.cfd` | notes-ios sends `Cookie: huyab_sso`. Cookie only, no Bearer. |
 | monitor | `alert.huyab.cfd` | monitor-ios with cookie + Bearer (server reads only the cookie). Calls Odoo over JSON-RPC, cron every minute, mails through mailer. |
 | share | `share.huyab.cfd` + MCP + skill | AI agents with the SSO cookie, or Bearer master password + `X-Email`. |

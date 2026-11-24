@@ -17,7 +17,7 @@ endpoint table on one page. Update it together with this file.
 | `ai-english` | web (worker + SPA) | https://en.huyab.cfd | English learning app, AI tutor, streak-reminder cron (`ai-english/AGENTS.md:5-12`) |
 | `ai-english-expo` | expo | — (EAS Update) | Mobile client of ai-english, no backend of its own (`ai-english-expo/AGENTS.md:5-7`) |
 | `chia-keo` | web (worker + SPA) | https://chiakeo.huyab.cfd | Group expense splitting + payment QR, MCP endpoint (`chia-keo/AGENTS.md:5-9`, `chia-keo/wrangler.toml`) |
-| `chia-keo-ios` | ios | — (sideloaded IPA) | Native SwiftUI client of chia-keo (`chia-keo-ios/AGENTS.md:5-8`) |
+| `chia-keo-ios` | ios | — (archived) | Archived native SwiftUI client of chia-keo; replaced by `home` (Tauri, SideStore), whose Chia kèo tabs call chia-keo (`home/app/web/src/tools/chiakeo/client.ts`) |
 | `notes` | web (worker + SPA) | https://notes.huyab.cfd | Personal daily journal (`notes/AGENTS.md:5-7`) |
 | `notes-ios` | ios | — (sideloaded IPA) | Native client of notes (`notes-ios/Notes/API.swift:149`) |
 | `monitor` | web (worker + SPA) | https://alert.huyab.cfd | Odoo `ir.cron` lateness monitor, emails alerts (`monitor/AGENTS.md:5-10`) |
@@ -69,7 +69,7 @@ graph LR
   end
 
   subgraph Clients
-    CKI["chia-keo-ios"]
+    CKI["home<br/>Tauri iOS"]
     NI["notes-ios"]
     MI["monitor-ios"]
     EXPO["ai-english-expo"]
@@ -166,12 +166,12 @@ Cloudflare account resources referenced below:
 
 ### chia-keo
 - **Depends on:** sso (`chia-keo/backend/src/sso.ts`, browser links in `chia-keo/frontend/src/adapters/browser/sso.ts:4-24`); mailer via `MAILER` + `MAILER_KEY` (`chia-keo/wrangler.toml`, `chia-keo/backend/src/env.ts:14`).
-- **Depended on by:** chia-keo-ios (`chia-keo-ios/ChiaKeo/API.swift:410`); Claude MCP clients via `/api/mcp` (`chia-keo/backend/src/mcp/http.ts`, `chia-keo/frontend/src/components/McpTokenPanel.tsx:118`).
+- **Depended on by:** home (`home/app/web/src/tools/chiakeo/client.ts`; the archived chia-keo-ios used `chia-keo-ios/ChiaKeo/API.swift:410`); Claude MCP clients via `/api/mcp` (`chia-keo/backend/src/mcp/http.ts`, `chia-keo/frontend/src/components/McpTokenPanel.tsx:118`).
 - **Auth:** better-auth session first, then `huyab_sso` cookie or `Authorization: Bearer <sso jwt>` (`chia-keo/backend/src/lib/require-user.ts:42-54`, `chia-keo/backend/src/sso.ts:62-68`); MCP uses its own bearer tokens.
 - **Data:** D1 `db` (`chiakeo_` prefix) via Drizzle (`chia-keo/wrangler.toml`).
 - **Deploy:** Workers Builds on push to `main` (`chia-keo/AGENTS.md:271`).
 
-### chia-keo-ios / notes-ios / monitor-ios
+### chia-keo-ios (archived) / notes-ios / monitor-ios
 Same SwiftUI template, zero dependencies, same `Auth.swift` / `API.swift` / `LoginView.swift` / `make-ipa.sh` layout (`chia-keo-ios/AGENTS.md:10-13`).
 - **Depends on:** sso WebView login, then the app API:
   - chia-keo-ios → `https://chiakeo.huyab.cfd`; installs `huyab_sso` in the cookie jar (`chia-keo-ios/ChiaKeo/Auth.swift:73-83`).
