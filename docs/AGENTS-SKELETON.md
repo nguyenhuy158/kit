@@ -67,6 +67,8 @@ repo (for example `chia-keo`). New apps follow it from the start; an existing ap
 moves when its owner next restructures it, in its own pull request.
 
 - Frontend code lives in `frontend/src/`, backend (Worker) code in `backend/src/`.
+- Use the full directory names `frontend` and `backend`; do not abbreviate them
+  to `fe` or `be`. Use the same full names in paths, configuration and documentation.
 - Code used by both lives in `shared/` at the repo root: pure logic and types, no
   IO, no `window`, no `fetch`.
 - Root files stay at the root: `index.html`, `public/`, `vite.config.ts`,
