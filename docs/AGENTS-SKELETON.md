@@ -78,6 +78,11 @@ moves when its owner next restructures it, in its own pull request.
 
 ## Webfont rule
 
+Serve webfonts from the app's own origin. For shared UI Kit fonts, copy the
+stylesheet, required WOFF2 weights and character subsets, and license from a
+pinned UI Kit revision. Use `font-display: swap` and a fallback font so the
+interface can render while webfonts load.
+
 ## Help rule
 
 Applies to every app with a UI that people must learn to use. `chia-keo` is the
