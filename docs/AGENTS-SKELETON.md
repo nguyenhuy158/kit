@@ -76,6 +76,8 @@ moves when its owner next restructures it, in its own pull request.
 - Name the TypeScript project for the Worker `tsconfig.backend.json`.
 - Libraries (`kit`) and the `ui-kit` gallery have no backend and keep a plain `src/`.
 
+## Webfont rule
+
 ## Help rule
 
 Applies to every app with a UI that people must learn to use. `chia-keo` is the
